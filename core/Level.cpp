@@ -1,0 +1,179 @@
+#include "Level.h"
+
+namespace fs = std::filesystem;
+
+Level::Level(const std::string &filePath) : map(filePath), player(map.getStartCoordinates()) {
+    initLevelList();
+    loadLevelData(levelPaths[0]);
+}
+
+void Level::loadLevelData(const std::string& path) {
+    boxes.clear();
+    targets.clear();
+    steps = 0;
+    moves = {};
+
+    map.loadMap(path);
+    player.setPosition(map.getStartCoordinates());
+
+    for (int y = 0; y < map.getHeight(); y++) {
+        for (int x = 0; x < map.getWidth(); x++) {
+            if (map.getTile(x, y) == Tile::Box) {
+                boxes.emplace_back(sf::Vector2i(x, y));
+                map.setTile(x, y, Tile::Empty);
+            }
+            if (map.getTile(x, y) == Tile::Player) {
+                map.setTile(x, y, Tile::Empty);
+            }
+            if (map.getTile(x, y) == Tile::Target) {
+                targets.emplace_back(x, y);
+            }
+        }
+    }
+    std::cout << "Level successfully initialized/reset" << std::endl;
+}
+
+
+Box *Level::getBoxAt(int x, int y) {
+    for (auto& box : boxes) {
+        if (box.getPosition().x == x && box.getPosition().y == y) {
+            return &box;
+        }
+    }
+    return nullptr;
+}
+
+void Level::movePlayer(Direction dir) {
+    const currState currState = {boxes, player};
+    int dx = 0, dy = 0;
+    switch (dir) {
+        case Direction::Up: dy = -1; break;
+        case Direction::Down: dy = 1; break;
+        case Direction::Left: dx = -1; break;
+        case Direction::Right: dx = 1; break;
+    }
+    int nextX = player.getPosition().x + dx;
+    int nextY = player.getPosition().y + dy;
+
+    bool moveSucceeded = false;
+
+    if (Box* box = getBoxAt(nextX, nextY)) {
+        if (moveBox(dx, dy, box)) {
+            player.setPosition({nextX, nextY});
+            moveSucceeded = true;
+        }
+    } else if (map.getTile(nextX, nextY) != Tile::Wall) {
+        player.setPosition({nextX, nextY});
+        moveSucceeded = true;
+    }
+    if (moveSucceeded) {
+        moves.push(currState);
+        steps++;
+    }
+}
+
+bool Level::moveBox(int dx, int dy, Box* box) {
+    int newX = box->getPosition().x + dx;
+    int newY = box->getPosition().y + dy;
+    if (getBoxAt(newX, newY) != nullptr) {
+        return false;
+    }
+    if (map.getTile(newX, newY) == Tile::Empty || map.getTile(newX, newY) == Tile::Target) {
+        box->setPosition({newX, newY});
+        return true;
+    }
+    return false;
+}
+
+int Level::getWidth() const {
+    return map.getWidth();
+}
+
+int Level::getHeight() const {
+    return map.getHeight();
+}
+
+void Level::handleInput(const sf::Keyboard::Key key, sf::RenderWindow& window) {
+    switch (key) {
+        case sf::Keyboard::Key::W: movePlayer(Direction::Up); break;
+        case sf::Keyboard::Key::S: movePlayer(Direction::Down); break;
+        case sf::Keyboard::Key::A: movePlayer(Direction::Left); break;
+        case sf::Keyboard::Key::D: movePlayer(Direction::Right); break;
+        case sf::Keyboard::Key::R: restart(); break;
+        case sf::Keyboard::Key::Z: undo(); break;
+        default: break;
+    }
+}
+
+void Level::restart() {
+    loadLevelData(levelPaths[currentLevel]);
+}
+
+int Level::getSteps() const {
+    return steps;
+}
+
+bool Level::checkWin() const {
+    for (auto target : targets) {
+        bool isPlaced = false;
+        for (auto& box : boxes) {
+            if (box.getPosition().x == target.x && box.getPosition().y == target.y) {
+                isPlaced = true;
+            }
+        }
+        if (!isPlaced) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void Level::next() {
+    currentLevel++;
+    if (currentLevel < levelPaths.size()) {
+        loadLevelData(levelPaths[currentLevel]);
+    } else {
+        std::cout << "All of the levels are complete" << std::endl;
+        currentLevel = 0;
+        loadLevelData(levelPaths[currentLevel]);
+    }
+}
+
+void Level::initLevelList() {
+    levelPaths.clear();
+    currentLevel = 0;
+    std::string path = "levels";
+    try {
+        if (fs::exists(path) && fs::is_directory(path)) {
+            for (const auto & entry : fs::directory_iterator(path)) {
+                if (entry.is_regular_file() && entry.path().extension() == ".txt") {
+                    levelPaths.push_back(entry.path().string());
+                }
+            }
+        }
+    } catch (const fs::filesystem_error& err) {
+        std::cerr << "Filesystem err: "<< err.what() << std::endl;
+    }
+    std::ranges::sort(levelPaths);
+}
+
+std::vector<Box> Level::getBoxes() const {
+    return boxes;
+}
+Player Level::getPlayer() const {
+    return player;
+}
+Map Level::getMap() const {
+    return map;
+}
+
+void Level::undo() {
+    if (moves.empty()) {
+        return;
+    }
+    currState prevState = moves.top();
+    moves.pop();
+    player.setPosition({prevState.player.getPosition().x, prevState.player.getPosition().y});
+    steps--;
+    this->boxes = prevState.boxes;
+}

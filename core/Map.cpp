@@ -1,0 +1,73 @@
+#include "Map.h"
+#include <fstream>
+#include <iostream>
+
+Map::Map(const std::string& filePath) {
+    loadMap(filePath);
+    for (int y = 0; y < map.size(); y++) {
+        for (int x = 0; x < map[y].size(); x++) {
+            if (getTile(x, y) == Tile::Player) {
+                map[y][x] = Tile::Empty;
+                startCoordinates = {x, y};
+            }
+        }
+    }
+}
+
+Tile Map::getTile(int x, int y) const {
+    if (x < 0 || x >= static_cast<int>(map[y].size()) || y < 0 || y >= static_cast<int>(map.size())) {
+        return Tile::Void;
+    }
+    return map[y][x];
+}
+
+
+int Map::getWidth() const {
+    return width;
+}
+
+int Map::getHeight() const {
+    return height;
+}
+
+sf::Vector2i Map::getStartCoordinates() const {
+    return startCoordinates;
+}
+
+const std::vector<std::vector<Tile>> &Map::getMap() const {
+    return map;
+}
+
+void Map::loadMap(const std::string &filePath) {
+    std::ifstream file(filePath);
+    if (!file.is_open()) {
+        std::cerr << "Error opening map file: " << filePath << std::endl;
+    }
+    map.clear();
+    width = 0;
+    height = 0;
+
+    std::string line;
+    while (std::getline(file, line)) {
+        std::vector<Tile> row;
+        for (char x : line) {
+            row.push_back(static_cast<Tile>(x));
+        }
+        map.push_back(row);
+        if (line.size() > width) {
+            width = static_cast<int>(line.size());
+        }
+        height++;
+    }
+    file.close();
+}
+
+void Map::setTile(int x, int y, const Tile &tile) {
+    if (x >= 0 && x < getWidth() && y >= 0 && y < getHeight()) {
+        map[y][x] = tile;
+    }
+}
+
+
+
+
