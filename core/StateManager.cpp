@@ -19,3 +19,11 @@ void StateManager::popState() {
     }
 }
 
+void StateManager::changeState(std::unique_ptr<AppState> newState) {
+    if (!states.empty()) {
+        states.pop();
+    }
+    states.push(std::move(newState));
+}
+
+

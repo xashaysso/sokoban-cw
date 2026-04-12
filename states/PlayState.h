@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../core/Level.h"
-#include "../graphics/Renderer.h"
+#include "../graphics/LevelRenderer.h"
 #include "../states/AppState.h"
 
 class StateManager;
@@ -15,7 +15,7 @@ class PlayState: public AppState{
     private:
         StateManager& manager;
         Level level;
-        Renderer renderer;
+        LevelRenderer renderer;
         const unsigned int tileSize = 64u;
 };
 

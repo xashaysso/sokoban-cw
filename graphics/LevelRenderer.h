@@ -10,14 +10,14 @@
 #include "../common/Types.h"
 #include "../core/Level.h"
 
-class Renderer {
+class LevelRenderer {
     public:
         sf::Font font;
         std::map<Tile, sf::Texture> textures;
         std::unique_ptr<sf::Sprite> sprite;
         sf::Text stepsText;
         sf::Text winText;
-        Renderer();
+        LevelRenderer();
         void render(sf::RenderWindow& window, const Level& level);
     private:
         void draw(sf::RenderWindow& window, const Level& level);

@@ -1,0 +1,43 @@
+#include "MenuState.h"
+
+#include "PlayState.h"
+
+MenuState::MenuState(StateManager &manager): manager(manager), selectedOption(0) {
+    options = {"START", "EXIT"};
+}
+
+void MenuState::handleInput(sf::RenderWindow &window) {
+    while (const std::optional event = window.pollEvent()) {
+        if (event->is<sf::Event::Closed>()) window.close();
+        if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
+            if (keyPressed->code == sf::Keyboard::Key::Up) {
+                if (selectedOption == 0) {
+                    selectedOption = options.size() - 1;
+                } else {
+                    selectedOption--;
+                }
+            }
+            if (keyPressed->code == sf::Keyboard::Key::Down) {
+                if (selectedOption == options.size() - 1) {
+                    selectedOption = 0;
+                } else {
+                    selectedOption++;
+                }
+            }
+            if (keyPressed->code == sf::Keyboard::Key::Enter) {
+                if (selectedOption == 0) {
+                    manager.changeState(std::make_unique<PlayState>(manager));
+                } else {
+                    window.close();
+                }
+            }
+        }
+    }
+}
+
+void MenuState::draw(sf::RenderWindow &window) {
+    renderer.render(window, options, selectedOption);
+}
+
+
+

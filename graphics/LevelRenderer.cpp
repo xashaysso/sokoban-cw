@@ -1,8 +1,8 @@
-#include "Renderer.h"
+#include "LevelRenderer.h"
 
 #include <iostream>
 
-Renderer::Renderer() : stepsText(font), winText(font) {
+LevelRenderer::LevelRenderer() : stepsText(font), winText(font) {
     loadTextures();
     sprite = std::make_unique<sf::Sprite>(textures[Tile::Empty]);
     if (!font.openFromFile("fonts/font.ttf")) {
@@ -20,7 +20,7 @@ Renderer::Renderer() : stepsText(font), winText(font) {
     winText.setOutlineThickness(2.f);
 }
 
-void Renderer::render(sf::RenderWindow &window, const Level &level) {
+void LevelRenderer::render(sf::RenderWindow &window, const Level &level) {
     window.clear(sf::Color(30, 30, 30));
     const auto& map = level.getMap();
 
@@ -36,14 +36,14 @@ void Renderer::render(sf::RenderWindow &window, const Level &level) {
         window.draw(winText);
     }
 }
-void Renderer::drawObject(sf::RenderWindow &window, int x, int y, Tile type) {
+void LevelRenderer::drawObject(sf::RenderWindow &window, int x, int y, Tile type) {
     constexpr float tileSize = 64.0f;
     sprite->setTexture(textures[type]);
     sprite->setPosition({x * tileSize, y * tileSize});
     window.draw(*sprite);
 }
 
-void Renderer::draw(sf::RenderWindow &window, const Level& level) {
+void LevelRenderer::draw(sf::RenderWindow &window, const Level& level) {
     const auto& map = level.getMap();
     const auto& player = level.getPlayer();
     const auto& boxes = level.getBoxes();
@@ -64,7 +64,7 @@ void Renderer::draw(sf::RenderWindow &window, const Level& level) {
 }
 
 
-void Renderer::loadTextures() {
+void LevelRenderer::loadTextures() {
     std::map<Tile, std::string> filePaths = {
         {Tile::Wall,   "assets/wall.png"},
         {Tile::Empty,  "assets/floor.png"},

@@ -22,13 +22,17 @@ add_executable(cw main.cpp
         entities/Box.cpp
         core/Map.cpp
         core/Level.cpp
-        graphics/Renderer.cpp
-        graphics/Renderer.h
+        graphics/LevelRenderer.cpp
+        graphics/LevelRenderer.h
         states/AppState.h
         core/StateManager.cpp
         core/StateManager.h
         states/PlayState.cpp
         states/PlayState.h
+        states/MenuState.cpp
+        states/MenuState.h
+        graphics/MenuRenderer.cpp
+        graphics/MenuRenderer.h
 )
 
 target_link_libraries(cw PRIVATE sfml-graphics sfml-window sfml-system sfml-audio)
