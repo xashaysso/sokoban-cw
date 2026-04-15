@@ -8,14 +8,15 @@ class StateManager;
 
 class PlayState: public AppState{
     public:
-        PlayState(StateManager &manager);
+        PlayState(StateManager &manager, sf::RenderWindow& window);
 
         void handleInput(sf::RenderWindow& window) override;
         void draw(sf::RenderWindow& window) override;
+        void initWindow(sf::RenderWindow& window) const;
     private:
         StateManager& manager;
         Level level;
         LevelRenderer renderer;
-        const unsigned int tileSize = 64u;
+        const unsigned int tileSize;
 };
 

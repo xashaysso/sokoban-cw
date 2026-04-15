@@ -5,7 +5,20 @@
 #include "PauseState.h"
 #include "../core/StateManager.h"
 
-PlayState::PlayState(StateManager& manager): manager(manager), level("levels/level1.txt") {}
+PlayState::PlayState(StateManager& manager, sf::RenderWindow& window): manager(manager), level("levels/level1.txt"), tileSize(64u) {
+    initWindow(window);
+}
+
+void PlayState::initWindow(sf::RenderWindow& window) const {
+    unsigned int newWidth = level.getWidth() * tileSize;
+    unsigned int newHeight = level.getHeight() * tileSize;
+
+    window.setSize({newWidth, newHeight});
+    sf::View newView(sf::FloatRect({0.f, 0.f}, {static_cast<float>(newWidth), static_cast<float>(newHeight)}));
+    window.setView(newView);
+    std::cout << "Window resized to: " << newWidth << ", " << newHeight << std::endl;
+}
+
 
 void PlayState::handleInput(sf::RenderWindow &window){
     while (const std::optional event = window.pollEvent()) {
@@ -17,15 +30,7 @@ void PlayState::handleInput(sf::RenderWindow &window){
                 std::cout << "Level completed" << std::endl;
                 if (keyPressed->code == sf::Keyboard::Key::Enter) {
                     level.next();
-
-                    unsigned int newWidth = level.getWidth() * tileSize;
-                    unsigned int newHeight = level.getHeight() * tileSize;
-
-                    window.setSize({newWidth, newHeight});
-                    sf::View newView(sf::FloatRect({0.f, 0.f}, {static_cast<float>(newWidth), static_cast<float>(newHeight)}));
-                    window.setView(newView);
-
-                    std::cout << "Window resized to: " << newWidth << ", " << newHeight << std::endl;
+                    initWindow(window);
                 }
             }
         } else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {

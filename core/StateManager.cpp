@@ -1,29 +1,45 @@
 #include "StateManager.h"
 
+#include <iostream>
+#include <stack>
+
 #include "../states/AppState.h"
 
-AppState *StateManager::getCurrentState() {
+AppState *StateManager::getCurrentState() const {
     if (states.empty()) {
         return nullptr;
     }
-    return states.top().get();
+    return states.empty() ? nullptr : states.back().get();
 }
 
 void StateManager::pushState(std::unique_ptr<AppState> newState) {
-    states.push(std::move(newState));
+    states.push_back(std::move(newState));
 }
 
 void StateManager::popState() {
     if (!states.empty()) {
-        states.pop();
+        states.pop_back();
     }
 }
 
 void StateManager::changeState(std::unique_ptr<AppState> newState) {
     if (!states.empty()) {
-        states.pop();
+        states.pop_back();
     }
-    states.push(std::move(newState));
+    states.push_back(std::move(newState));
 }
+
+void StateManager::draw(sf::RenderWindow& window) const {
+    for (auto &state : states) {
+        state->draw(window);
+    }
+}
+
+void StateManager::resetToState(std::unique_ptr<AppState> newState) {
+    states.clear();
+    states.push_back(std::move(newState));
+}
+
+
 
 

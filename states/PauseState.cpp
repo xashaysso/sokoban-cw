@@ -31,9 +31,8 @@ void PauseState::handleInput(sf::RenderWindow &window) {
                 if (selectedOption == 0) {
                     manager.popState();
                 } else {
-                    auto& m = manager;
-                    m.popState();
-                    m.changeState(std::make_unique<MenuState>(manager));
+                    manager.resetToState(std::make_unique<MenuState>(manager, window));
+                    return;
                 }
             }
         }

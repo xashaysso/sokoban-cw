@@ -15,7 +15,7 @@ Map::Map(const std::string& filePath) {
 }
 
 Tile Map::getTile(int x, int y) const {
-    if (x < 0 || x >= static_cast<int>(map[y].size()) || y < 0 || y >= static_cast<int>(map.size())) {
+    if (y < 0 || y >= static_cast<int>(map.size()) || x < 0 || x >= static_cast<int>(map[y].size())) {
         return Tile::Void;
     }
     return map[y][x];

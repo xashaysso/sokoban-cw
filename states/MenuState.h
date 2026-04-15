@@ -6,7 +6,7 @@
 
 class MenuState: public AppState {
 public:
-        MenuState(StateManager& manager);
+        MenuState(StateManager& manager, sf::RenderWindow& window);
 
         void handleInput(sf::RenderWindow &window) override;
         void draw(sf::RenderWindow &window) override;

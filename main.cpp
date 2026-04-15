@@ -10,19 +10,17 @@ int main()
     try {
         StateManager manager;
 
-        manager.pushState(std::make_unique<MenuState>(manager));
-
         sf::RenderWindow window(sf::VideoMode({800u, 600u}), "Evanescence", sf::Style::Titlebar | sf::Style::Close);
         window.setFramerateLimit(60);
+
+        manager.pushState(std::make_unique<MenuState>(manager, window));
 
         while (window.isOpen()) {
             if (auto* current = manager.getCurrentState()) {
                 current->handleInput(window);
             }
             window.clear(sf::Color(30, 30, 30));
-            if (auto* current = manager.getCurrentState()) {
-                current->draw(window);
-            }
+            manager.draw(window);
             window.display();
         }
     }
