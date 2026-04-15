@@ -2,6 +2,9 @@
 
 #include <iostream>
 
+#include "PauseState.h"
+#include "../core/StateManager.h"
+
 PlayState::PlayState(StateManager& manager): manager(manager), level("levels/level1.txt") {}
 
 void PlayState::handleInput(sf::RenderWindow &window){
@@ -26,6 +29,10 @@ void PlayState::handleInput(sf::RenderWindow &window){
                 }
             }
         } else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
+            if (keyPressed->code == sf::Keyboard::Key::Escape) {
+                manager.pushState(std::make_unique<PauseState>(manager));
+                return;
+            }
             level.handleInput(keyPressed->code, window);
         }
     }

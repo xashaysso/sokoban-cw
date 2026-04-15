@@ -1,0 +1,12 @@
+#pragma once
+#include "SFML/Graphics/Font.hpp"
+#include "SFML/Graphics/Text.hpp"
+#include "SFML/Graphics/RenderWindow.hpp"
+
+class PauseRenderer {
+public:
+    PauseRenderer();
+    void render(sf::RenderWindow& window, std::vector<std::string>& options, int selectedOption) const;
+private:
+    sf::Font font;
+};

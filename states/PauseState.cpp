@@ -1,12 +1,15 @@
+#include "PauseState.h"
+
 #include "MenuState.h"
-
 #include "PlayState.h"
+#include "../core/StateManager.h"
 
-MenuState::MenuState(StateManager &manager): manager(manager), selectedOption(0) {
-    options = {"START", "EXIT"};
+PauseState::PauseState(StateManager &manager): manager(manager), selectedOption(0){
+    options = {"RESUME", "EXIT TO MENU"};
 }
 
-void MenuState::handleInput(sf::RenderWindow &window) {
+
+void PauseState::handleInput(sf::RenderWindow &window) {
     while (const std::optional event = window.pollEvent()) {
         if (event->is<sf::Event::Closed>()) window.close();
         if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
@@ -26,18 +29,18 @@ void MenuState::handleInput(sf::RenderWindow &window) {
             }
             if (keyPressed->code == sf::Keyboard::Key::Enter) {
                 if (selectedOption == 0) {
-                    manager.changeState(std::make_unique<PlayState>(manager));
+                    manager.popState();
                 } else {
-                    window.close();
+                    auto& m = manager;
+                    m.popState();
+                    m.changeState(std::make_unique<MenuState>(manager));
                 }
             }
         }
     }
 }
 
-void MenuState::draw(sf::RenderWindow &window) {
+void PauseState::draw(sf::RenderWindow &window) {
     renderer.render(window, options, selectedOption);
 }
-
-
 

@@ -33,6 +33,10 @@ add_executable(cw main.cpp
         states/MenuState.h
         graphics/MenuRenderer.cpp
         graphics/MenuRenderer.h
+        states/PauseState.cpp
+        states/PauseState.h
+        graphics/PauseRenderer.cpp
+        graphics/PauseRenderer.h
 )
 
 target_link_libraries(cw PRIVATE sfml-graphics sfml-window sfml-system sfml-audio)

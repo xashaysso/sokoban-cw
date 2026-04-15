@@ -8,7 +8,7 @@ MenuRenderer::MenuRenderer() {
     }
 }
 
-void MenuRenderer::render(sf::RenderWindow &window, std::vector<std::string>& options, int selectedOption) {
+void MenuRenderer::render(sf::RenderWindow &window, std::vector<std::string>& options, int selectedOption) const {
     window.clear(sf::Color(30, 30, 30));
     for (size_t i = 0; i < options.size(); i++) {
         sf::Text text(font, options[i], 50);

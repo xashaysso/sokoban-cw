@@ -4,9 +4,6 @@
 #include "../core/StateManager.h"
 #include "../graphics/MenuRenderer.h"
 
-#include "SFML/Graphics/Font.hpp"
-#include "SFML/Graphics/Text.hpp"
-
 class MenuState: public AppState {
 public:
         MenuState(StateManager& manager);
