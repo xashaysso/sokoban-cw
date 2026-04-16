@@ -29,6 +29,8 @@ add_executable(cw main.cpp
         graphics/MenuRenderer.cpp
         states/PauseState.cpp
         graphics/PauseRenderer.cpp
+        core/AudioManager.cpp
+        core/AudioManager.h
 )
 
 target_link_libraries(cw PRIVATE sfml-graphics sfml-window sfml-system sfml-audio)

@@ -16,3 +16,9 @@ enum class Direction {
     Down,
     Right,
 };
+
+enum class MoveResult {
+    None,
+    Walk,
+    Push,
+};

@@ -40,31 +40,15 @@ void StateManager::draw(sf::RenderWindow& window) const {
     }
 }
 
-void StateManager::startMusic(const std::string &path, float volume) {
-    if (currentMusic) {
-        fadingMusic = std::move(currentMusic);
-    }
-    currentMusic = std::make_unique<sf::Music>();
-    if (currentMusic->openFromFile(path)) {
-        currentMusic->setLooping(true);
-        currentMusic->setVolume(volume);
-        currentMusic->play();
-        musicTargetVolume = volume;
-    }
+AudioManager &StateManager::getAudio() {
+    return audioManager;
 }
 
 void StateManager::update(float dt) {
-    if (fadingMusic) {
-        float vol = fadingMusic->getVolume();
-        vol -= fadeSpeed * dt;
-        if (vol <= 0.0f) {
-            fadingMusic->stop();
-            fadingMusic.reset();
-        } else {
-            fadingMusic->setVolume(vol);
-        }
-    }
+    audioManager.update(dt);
 }
+
+
 
 
 

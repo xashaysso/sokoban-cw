@@ -23,8 +23,8 @@ class Level {
         Player getPlayer() const;
         std::vector<Box> getBoxes() const;
         Box* getBoxAt(int x, int y);
-        void movePlayer(Direction dir);
-        void handleInput(sf::Keyboard::Key key, sf::RenderWindow& window);
+        MoveResult movePlayer(Direction dir);
+        MoveResult handleInput(sf::Keyboard::Key key, sf::RenderWindow& window);
         void restart();
         int getSteps() const;
         bool checkWin() const;

@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 
+#include "AudioManager.h"
 #include "SFML/Audio/Music.hpp"
 #include "SFML/Graphics/RenderWindow.hpp"
 
@@ -17,16 +18,9 @@ class StateManager {
         void changeState(std::unique_ptr<AppState> newState);
         void draw(sf::RenderWindow& window) const;
         void resetToState(std::unique_ptr<AppState> newState);
-        void startMusic(const std::string& path, float volume);
+        AudioManager& getAudio();
         void update(float dt);
     private:
         std::vector<std::unique_ptr<AppState>> states;
-
-    // music control
-
-        std::unique_ptr<sf::Music> currentMusic;
-        std::unique_ptr<sf::Music> fadingMusic;
-        float fadeSpeed = 50.f;
-        float musicTargetVolume = 20.f;
-
+        AudioManager audioManager;
 };

@@ -43,7 +43,7 @@ Box *Level::getBoxAt(int x, int y) {
     return nullptr;
 }
 
-void Level::movePlayer(Direction dir) {
+MoveResult Level::movePlayer(Direction dir) {
     const currState currState = {boxes, player};
     int dx = 0, dy = 0;
     switch (dir) {
@@ -55,21 +55,22 @@ void Level::movePlayer(Direction dir) {
     int nextX = player.getPosition().x + dx;
     int nextY = player.getPosition().y + dy;
 
-    bool moveSucceeded = false;
+    MoveResult moveResult = MoveResult::None;
 
     if (Box* box = getBoxAt(nextX, nextY)) {
         if (moveBox(dx, dy, box)) {
             player.setPosition({nextX, nextY});
-            moveSucceeded = true;
+            moveResult = MoveResult::Push;
         }
     } else if (map.getTile(nextX, nextY) != Tile::Wall) {
         player.setPosition({nextX, nextY});
-        moveSucceeded = true;
+        moveResult = MoveResult::Walk;
     }
-    if (moveSucceeded) {
+    if (moveResult != MoveResult::None) {
         moves.push(currState);
         steps++;
     }
+    return moveResult;
 }
 
 bool Level::moveBox(int dx, int dy, Box* box) {
@@ -93,15 +94,19 @@ int Level::getHeight() const {
     return map.getHeight();
 }
 
-void Level::handleInput(const sf::Keyboard::Key key, sf::RenderWindow& window) {
+MoveResult Level::handleInput(const sf::Keyboard::Key key, sf::RenderWindow& window) {
     switch (key) {
-        case sf::Keyboard::Key::W: movePlayer(Direction::Up); break;
-        case sf::Keyboard::Key::S: movePlayer(Direction::Down); break;
-        case sf::Keyboard::Key::A: movePlayer(Direction::Left); break;
-        case sf::Keyboard::Key::D: movePlayer(Direction::Right); break;
-        case sf::Keyboard::Key::R: restart(); break;
-        case sf::Keyboard::Key::Z: undo(); break;
-        default: break;
+        case sf::Keyboard::Key::W: return movePlayer(Direction::Up);
+        case sf::Keyboard::Key::S: return movePlayer(Direction::Down);
+        case sf::Keyboard::Key::A: return movePlayer(Direction::Left);
+        case sf::Keyboard::Key::D: return movePlayer(Direction::Right);
+        case sf::Keyboard::Key::R:
+            restart();
+            return MoveResult::None;
+        case sf::Keyboard::Key::Z: undo();
+            return MoveResult::None;
+        default:
+            return MoveResult::None;
     }
 }
 

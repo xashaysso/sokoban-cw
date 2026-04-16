@@ -7,7 +7,10 @@
 
 PlayState::PlayState(StateManager& manager, sf::RenderWindow& window): manager(manager), level("levels/level1.txt"), tileSize(64u) {
     initWindow(window);
-    manager.startMusic("audio/game.ogg", 15.f);
+    auto& audio = manager.getAudio();
+    audio.loadSound("walk", "audio/footstep.wav");
+    audio.loadSound("push", "audio/box.wav");
+    audio.startMusic("audio/game.ogg",20.0f);
 }
 
 void PlayState::initWindow(sf::RenderWindow& window) const {
@@ -39,7 +42,18 @@ void PlayState::handleInput(sf::RenderWindow &window){
                 manager.pushState(std::make_unique<PauseState>(manager));
                 return;
             }
-            level.handleInput(keyPressed->code, window);
+            MoveResult result = level.handleInput(keyPressed->code, window);
+            auto& audio = manager.getAudio();
+            switch (result) {
+                case MoveResult::Walk:
+                    audio.playSound("walk", 2.f);
+                    break;
+                case MoveResult::Push:
+                    audio.playSound("push", 1.f);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
