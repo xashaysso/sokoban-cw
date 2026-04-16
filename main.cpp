@@ -9,6 +9,7 @@ int main()
 {
     try {
         StateManager manager;
+        sf::Clock clock;
 
         sf::RenderWindow window(sf::VideoMode({800u, 600u}), "Evanescence", sf::Style::Titlebar | sf::Style::Close);
         window.setFramerateLimit(60);
@@ -16,9 +17,14 @@ int main()
         manager.pushState(std::make_unique<MenuState>(manager, window));
 
         while (window.isOpen()) {
+            float dt = clock.restart().asSeconds();
+
             if (auto* current = manager.getCurrentState()) {
                 current->handleInput(window);
             }
+
+            manager.update(dt);
+
             window.clear(sf::Color(30, 30, 30));
             manager.draw(window);
             window.display();

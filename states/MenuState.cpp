@@ -7,6 +7,7 @@ MenuState::MenuState(StateManager& manager, sf::RenderWindow& window): manager(m
     window.setSize({800u, 600u});
     sf::View view(sf::FloatRect({0.f, 0.f}, {800.f, 600.f}));
     window.setView(view);
+    manager.startMusic("audio/menu.ogg", 15.f);
 }
 
 void MenuState::handleInput(sf::RenderWindow &window) {

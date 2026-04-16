@@ -7,6 +7,7 @@
 
 PlayState::PlayState(StateManager& manager, sf::RenderWindow& window): manager(manager), level("levels/level1.txt"), tileSize(64u) {
     initWindow(window);
+    manager.startMusic("audio/game.ogg", 15.f);
 }
 
 void PlayState::initWindow(sf::RenderWindow& window) const {

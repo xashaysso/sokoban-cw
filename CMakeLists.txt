@@ -23,20 +23,12 @@ add_executable(cw main.cpp
         core/Map.cpp
         core/Level.cpp
         graphics/LevelRenderer.cpp
-        graphics/LevelRenderer.h
-        states/AppState.h
         core/StateManager.cpp
-        core/StateManager.h
         states/PlayState.cpp
-        states/PlayState.h
         states/MenuState.cpp
-        states/MenuState.h
         graphics/MenuRenderer.cpp
-        graphics/MenuRenderer.h
         states/PauseState.cpp
-        states/PauseState.h
         graphics/PauseRenderer.cpp
-        graphics/PauseRenderer.h
 )
 
 target_link_libraries(cw PRIVATE sfml-graphics sfml-window sfml-system sfml-audio)
@@ -59,5 +51,8 @@ if(WIN32)
             COMMAND ${CMAKE_COMMAND} -E create_symlink
             "${CMAKE_SOURCE_DIR}/fonts"
             "$<TARGET_FILE_DIR:cw>/fonts"
+            COMMAND ${CMAKE_COMMAND} -E create_symlink
+            "${CMAKE_SOURCE_DIR}/audio"
+            "$<TARGET_FILE_DIR:cw>/audio"
     )
 endif()
