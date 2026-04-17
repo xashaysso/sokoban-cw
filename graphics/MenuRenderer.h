@@ -6,7 +6,7 @@
 class MenuRenderer {
     public:
         MenuRenderer();
-        void render(sf::RenderWindow& window, std::vector<std::string>& options, int selectedOption) const;
+        void render(sf::RenderWindow& window, std::vector<std::string>& options, int selectedOption, bool hasSave) const;
     private:
         sf::Font font;
 };

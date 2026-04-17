@@ -1,10 +1,25 @@
 #include "Level.h"
 
+#include <fstream>
+
 namespace fs = std::filesystem;
 
 Level::Level(const std::string &filePath) : map(filePath), player(map.getStartCoordinates()) {
     initLevelList();
-    loadLevelData(levelPaths[0]);
+
+    fs::path targetPath(filePath);
+
+    const auto it = std::ranges::find_if(levelPaths, [&](const std::string& p) {
+        return fs::path(p) == targetPath;
+    });
+
+    if (it != levelPaths.end()) {
+        currentLevel = static_cast<int>(std::distance(levelPaths.begin(), it));
+    } else {
+        currentLevel = 0;
+    }
+
+    loadLevelData(levelPaths[currentLevel]);
 }
 
 void Level::loadLevelData(const std::string& path) {
@@ -142,6 +157,7 @@ void Level::next() {
         currentLevel = 0;
         loadLevelData(levelPaths[currentLevel]);
     }
+    saveProgress(currentLevel+1); // index + 1 = Level number
 }
 
 void Level::initLevelList() {
@@ -181,4 +197,11 @@ void Level::undo() {
     player.setPosition({prevState.player.getPosition().x, prevState.player.getPosition().y});
     steps--;
     this->boxes = prevState.boxes;
+}
+
+void Level::saveProgress(const int currentLevelIndex) {
+    if (std::ofstream saveFile("save.txt"); saveFile.is_open()) {
+        saveFile << currentLevelIndex;
+        saveFile.close();
+    }
 }

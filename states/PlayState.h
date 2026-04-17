@@ -8,7 +8,7 @@ class StateManager;
 
 class PlayState: public AppState{
     public:
-        PlayState(StateManager &manager, sf::RenderWindow& window);
+        PlayState(StateManager &manager, sf::RenderWindow& window, std::string path);
 
         void handleInput(sf::RenderWindow& window) override;
         void draw(sf::RenderWindow& window) override;

@@ -1,12 +1,16 @@
 #include "MenuState.h"
 
+#include <fstream>
+
 #include "PlayState.h"
 
 MenuState::MenuState(StateManager& manager, sf::RenderWindow& window): manager(manager), selectedOption(0) {
-    options = {"START", "EXIT"};
+    options = {"NEW GAME", "CONTINUE", "EXIT"};
     window.setSize({800u, 600u});
     sf::View view(sf::FloatRect({0.f, 0.f}, {800.f, 600.f}));
     window.setView(view);
+
+    hasSave = std::filesystem::exists("save.txt");
 
     auto& audio = manager.getAudio();
     audio.startMusic("audio/menu.ogg", 20.0f);
@@ -21,6 +25,9 @@ void MenuState::handleInput(sf::RenderWindow &window) {
                     selectedOption = options.size() - 1;
                 } else {
                     selectedOption--;
+                    if (selectedOption == 1 && !hasSave) {
+                        selectedOption--;
+                    }
                 }
             }
             if (keyPressed->code == sf::Keyboard::Key::S) {
@@ -28,22 +35,42 @@ void MenuState::handleInput(sf::RenderWindow &window) {
                     selectedOption = 0;
                 } else {
                     selectedOption++;
+                    if (selectedOption == 1 && !hasSave) {
+                        selectedOption++;
+                    }
                 }
             }
             if (keyPressed->code == sf::Keyboard::Key::Enter) {
-                if (selectedOption == 0) {
-                    auto& m = manager;
-                    m.changeState(std::make_unique<PlayState>(m, window));
-                    return;
+                auto& m = manager;
+                switch (selectedOption) {
+                    case 0:
+                        m.changeState(std::make_unique<PlayState>(m, window, "levels/level1.txt"));
+                        break;
+                    case 1: {
+                        std::ifstream saveFile("save.txt");
+                        std::string levelPath = "levels/level1.txt";
+
+                        if (saveFile.is_open()) {
+                            int levelIndex;
+                            if (saveFile >> levelIndex) {
+                                levelPath = "levels/level" + std::to_string(levelIndex) + ".txt";
+                            }
+                            saveFile.close();
+                        }
+                        m.changeState(std::make_unique<PlayState>(m, window, levelPath));
+                        break;
+                    }
+                    default:
+                        window.close();
+                        break;
                 }
-                window.close();
             }
         }
     }
 }
 
 void MenuState::draw(sf::RenderWindow &window) {
-    renderer.render(window, options, selectedOption);
+    renderer.render(window, options, selectedOption, hasSave);
 }
 
 

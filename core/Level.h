@@ -30,6 +30,8 @@ class Level {
         bool checkWin() const;
         void next();
         void undo();
+
+        static void saveProgress(int currentLevelIndex);
     private:
         Map map;
         Player player;

@@ -1,11 +1,12 @@
 #include "PlayState.h"
 
+#include <fstream>
 #include <iostream>
 
 #include "PauseState.h"
 #include "../core/StateManager.h"
 
-PlayState::PlayState(StateManager& manager, sf::RenderWindow& window): manager(manager), level("levels/level1.txt"), tileSize(64u) {
+PlayState::PlayState(StateManager& manager, sf::RenderWindow& window, std::string path): manager(manager), level(path), tileSize(64u) {
     initWindow(window);
     auto& audio = manager.getAudio();
     audio.loadSound("walk", "audio/footstep.wav");
@@ -32,6 +33,7 @@ void PlayState::handleInput(sf::RenderWindow &window){
         if (level.checkWin()) {
             if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
                 std::cout << "Level completed" << std::endl;
+
                 if (keyPressed->code == sf::Keyboard::Key::Enter) {
                     level.next();
                     initWindow(window);

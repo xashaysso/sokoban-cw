@@ -15,4 +15,5 @@ private:
         MenuRenderer renderer;
         std::vector<std::string> options;
         int selectedOption;
+        bool hasSave;
 };
