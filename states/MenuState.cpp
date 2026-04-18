@@ -44,16 +44,18 @@ void MenuState::handleInput(sf::RenderWindow &window) {
                 auto& m = manager;
                 switch (selectedOption) {
                     case 0:
-                        m.changeState(std::make_unique<PlayState>(m, window, "levels/level1.txt"));
+                        m.changeState(std::make_unique<PlayState>(m, window, "levels/level01.txt"));
                         break;
                     case 1: {
                         std::ifstream saveFile("save.txt");
-                        std::string levelPath = "levels/level1.txt";
+                        std::string levelPath = "levels/level01.txt";
 
                         if (saveFile.is_open()) {
                             int levelIndex;
                             if (saveFile >> levelIndex) {
-                                levelPath = "levels/level" + std::to_string(levelIndex) + ".txt";
+                                std::ostringstream ss;
+                                ss << "levels/level" << std::setfill('0') << std::setw(2) << levelIndex << ".txt";
+                                levelPath = ss.str();
                             }
                             saveFile.close();
                         }

@@ -17,7 +17,7 @@ int main()
         manager.pushState(std::make_unique<MenuState>(manager, window));
 
         while (window.isOpen()) {
-            float dt = clock.restart().asSeconds();
+            const float dt = clock.restart().asSeconds();
 
             if (auto* current = manager.getCurrentState()) {
                 current->handleInput(window);

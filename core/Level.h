@@ -37,6 +37,11 @@ class Level {
 
         static void saveProgress(int currentLevelIndex);
         void update(float dt);
+        bool isLastLevel() const;
+
+        std::vector<std::string> getLevelPaths() const;
+        bool isAnimating() const;
+        int getCurrentLevelIndex() const;
     private:
         Map map;
         Player player;

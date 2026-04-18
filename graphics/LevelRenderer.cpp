@@ -28,13 +28,6 @@ void LevelRenderer::render(sf::RenderWindow &window, const Level &level) {
 
     stepsText.setString("Steps: " + std::to_string(level.getSteps()));
     window.draw(stepsText);
-
-    if (level.checkWin()) {
-        sf::FloatRect bounds = winText.getLocalBounds();
-        winText.setOrigin({bounds.size.x / 2.f, bounds.size.y / 2.f});
-        winText.setPosition({window.getSize().x / 2.f, window.getSize().y / 2.f});
-        window.draw(winText);
-    }
 }
 void LevelRenderer::drawObject(sf::RenderWindow &window, sf::Vector2f pixelPos, Tile type) {
     sprite->setTexture(textures[type]);

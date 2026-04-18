@@ -19,6 +19,10 @@ class PlayState: public AppState{
         StateManager& manager;
         Level level;
         LevelRenderer renderer;
+        sf::RenderWindow& renderWindow;
         const unsigned int tileSize;
+
+        sf::Clock levelClock;
+        bool winStatePushed;
 };
 

@@ -163,7 +163,6 @@ void Level::next() {
         currentLevel = 0;
         loadLevelData(levelPaths[currentLevel]);
     }
-    saveProgress(currentLevel+1); // index + 1 = Level number
     player.syncVisualPosition();
     for (auto& box : boxes) {
         box.syncVisualPosition();
@@ -235,4 +234,27 @@ const Player& Level::getPlayer() const{
 }
 const Map& Level::getMap() const{
     return map;
+}
+
+bool Level::isLastLevel() const {
+    if (currentLevel == levelPaths.size() - 1) {
+        return true;
+    }
+    return false;
+}
+
+std::vector<std::string> Level::getLevelPaths() const {
+    return levelPaths;
+}
+
+bool Level::isAnimating() const {
+    if (player.isMoving()) return true;
+    for (auto& box : boxes) {
+        if (box.isMoving()) return true;
+    }
+    return false;
+}
+
+int Level::getCurrentLevelIndex() const {
+    return currentLevel;
 }

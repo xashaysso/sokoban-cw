@@ -11,6 +11,7 @@ class Box {
         void update(float dt);
         sf::Vector2f getVisualPosition() const;
         void syncVisualPosition();
+        bool isMoving() const;
     private:
         sf::Vector2i position;
 

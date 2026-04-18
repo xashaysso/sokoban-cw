@@ -34,6 +34,12 @@ void Player::syncVisualPosition() {
     visualPosition = { static_cast<float>(position.x) * 64.f, static_cast<float>(position.y) * 64.f };
 }
 
+bool Player::isMoving() const {
+    const sf::Vector2f targetPos = { static_cast<float>(position.x) * 64.f, static_cast<float>(position.y) * 64.f };
+    return (std::abs(visualPosition.x - targetPos.x) > 1.0f ||
+            std::abs(visualPosition.y - targetPos.y) > 1.0f);
+}
+
 
 
 
