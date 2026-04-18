@@ -10,6 +10,7 @@ public:
 
         void handleInput(sf::RenderWindow &window) override;
         void draw(sf::RenderWindow &window) override;
+        void update(float dt) override;
 private:
         StateManager& manager;
         MenuRenderer renderer;

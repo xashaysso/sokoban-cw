@@ -36,10 +36,9 @@ void LevelRenderer::render(sf::RenderWindow &window, const Level &level) {
         window.draw(winText);
     }
 }
-void LevelRenderer::drawObject(sf::RenderWindow &window, int x, int y, Tile type) {
-    constexpr float tileSize = 64.0f;
+void LevelRenderer::drawObject(sf::RenderWindow &window, sf::Vector2f pixelPos, Tile type) {
     sprite->setTexture(textures[type]);
-    sprite->setPosition({x * tileSize, y * tileSize});
+    sprite->setPosition(pixelPos);
     window.draw(*sprite);
 }
 
@@ -50,17 +49,18 @@ void LevelRenderer::draw(sf::RenderWindow &window, const Level& level) {
 
     for (int y = 0; y < map.getHeight(); y++) {
         for (int x = 0; x < map.getWidth(); x++) {
-            drawObject(window, x, y, Tile::Empty);
+            constexpr float tileSize = 64.0f;
+            drawObject(window, {x * tileSize, y * tileSize}, Tile::Empty);
             Tile type = map.getTile(x, y);
             if (type != Tile::Empty) {
-                drawObject(window, x, y, type);
+                drawObject(window, {x * tileSize, y * tileSize}, type);
             }
         }
     }
     for (auto& box : boxes) {
-        drawObject(window, box.getPosition().x, box.getPosition().y, Tile::Box);
+        drawObject(window, box.getVisualPosition(), Tile::Box);
     }
-    drawObject(window, player.getPosition().x, player.getPosition().y, Tile::Player);
+    drawObject(window, player.getVisualPosition(), Tile::Player);
 }
 
 

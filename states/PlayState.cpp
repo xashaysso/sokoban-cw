@@ -64,5 +64,10 @@ void PlayState::draw(sf::RenderWindow &window){
     renderer.render(window, level);
 }
 
+void PlayState::update(const float dt){
+    level.update(dt);
+}
+
+
 
 

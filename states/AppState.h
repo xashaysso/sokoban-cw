@@ -6,5 +6,6 @@ public:
         virtual ~AppState() = default;
         virtual void handleInput(sf::RenderWindow& window) = 0;
         virtual void draw(sf::RenderWindow& window) = 0;
+        virtual void update(float dt) = 0;
 };
 

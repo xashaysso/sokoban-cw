@@ -47,19 +47,27 @@ void Map::loadMap(const std::string &filePath) {
     width = 0;
     height = 0;
 
+    std::vector<std::string> lines;
     std::string line;
     while (std::getline(file, line)) {
+        if (line.empty()) continue;
+        lines.push_back(line);
+        if (line.size() > width) width = line.size();
+    }
+    height = lines.size();
+    file.close();
+
+    for (const auto& l : lines) {
         std::vector<Tile> row;
-        for (char x : line) {
-            row.push_back(static_cast<Tile>(x));
+        for (int x = 0; x < width; x++) {
+            if (x < l.size()) {
+                row.push_back(static_cast<Tile>(l[x]));
+            } else {
+                row.push_back(Tile::Void);
+            }
         }
         map.push_back(row);
-        if (line.size() > width) {
-            width = static_cast<int>(line.size());
-        }
-        height++;
     }
-    file.close();
 }
 
 void Map::setTile(int x, int y, const Tile &tile) {

@@ -44,8 +44,11 @@ AudioManager &StateManager::getAudio() {
     return audioManager;
 }
 
-void StateManager::update(float dt) {
+void StateManager::update(const float dt) {
     audioManager.update(dt);
+    if (!states.empty()) {
+        states.back()->update(dt);
+    }
 }
 
 

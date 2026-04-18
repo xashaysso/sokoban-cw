@@ -43,3 +43,6 @@ void PauseState::draw(sf::RenderWindow &window) {
     renderer.render(window, options, selectedOption);
 }
 
+void PauseState::update(float dt) {}
+
+

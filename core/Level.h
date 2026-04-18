@@ -19,9 +19,9 @@ class Level {
         explicit Level(const std::string& filePath);
         int getWidth() const;
         int getHeight() const;
-        Map getMap() const;
-        Player getPlayer() const;
-        std::vector<Box> getBoxes() const;
+        Map& getMap();
+        Player& getPlayer();
+        std::vector<Box>& getBoxes();
         Box* getBoxAt(int x, int y);
         MoveResult movePlayer(Direction dir);
         MoveResult handleInput(sf::Keyboard::Key key, sf::RenderWindow& window);
@@ -31,7 +31,12 @@ class Level {
         void next();
         void undo();
 
+        const Map& getMap() const;
+        const Player& getPlayer() const;
+        const std::vector<Box>& getBoxes() const;
+
         static void saveProgress(int currentLevelIndex);
+        void update(float dt);
     private:
         Map map;
         Player player;

@@ -12,7 +12,9 @@ class PlayState: public AppState{
 
         void handleInput(sf::RenderWindow& window) override;
         void draw(sf::RenderWindow& window) override;
+        void update(float dt) override;
         void initWindow(sf::RenderWindow& window) const;
+
     private:
         StateManager& manager;
         Level level;

@@ -7,7 +7,7 @@ enum class Tile {
     Box = 'B',
     Target = 'X',
     BoxOnTarget = '*',
-    Void = -1,
+    Void = ' ',
 };
 
 enum class Direction {

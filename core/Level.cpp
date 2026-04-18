@@ -38,6 +38,8 @@ void Level::loadLevelData(const std::string& path) {
                 map.setTile(x, y, Tile::Empty);
             }
             if (map.getTile(x, y) == Tile::Player) {
+                player.setPosition({x, y});
+                player.syncVisualPosition();
                 map.setTile(x, y, Tile::Empty);
             }
             if (map.getTile(x, y) == Tile::Target) {
@@ -127,6 +129,10 @@ MoveResult Level::handleInput(const sf::Keyboard::Key key, sf::RenderWindow& win
 
 void Level::restart() {
     loadLevelData(levelPaths[currentLevel]);
+    player.syncVisualPosition();
+    for (auto& box : boxes) {
+        box.syncVisualPosition();
+    }
 }
 
 int Level::getSteps() const {
@@ -158,6 +164,10 @@ void Level::next() {
         loadLevelData(levelPaths[currentLevel]);
     }
     saveProgress(currentLevel+1); // index + 1 = Level number
+    player.syncVisualPosition();
+    for (auto& box : boxes) {
+        box.syncVisualPosition();
+    }
 }
 
 void Level::initLevelList() {
@@ -178,13 +188,13 @@ void Level::initLevelList() {
     std::ranges::sort(levelPaths);
 }
 
-std::vector<Box> Level::getBoxes() const {
+std::vector<Box>& Level::getBoxes(){
     return boxes;
 }
-Player Level::getPlayer() const {
+Player& Level::getPlayer(){
     return player;
 }
-Map Level::getMap() const {
+Map& Level::getMap(){
     return map;
 }
 
@@ -197,6 +207,10 @@ void Level::undo() {
     player.setPosition({prevState.player.getPosition().x, prevState.player.getPosition().y});
     steps--;
     this->boxes = prevState.boxes;
+    player.syncVisualPosition();
+    for (auto& box : boxes) {
+        box.syncVisualPosition();
+    }
 }
 
 void Level::saveProgress(const int currentLevelIndex) {
@@ -204,4 +218,21 @@ void Level::saveProgress(const int currentLevelIndex) {
         saveFile << currentLevelIndex;
         saveFile.close();
     }
+}
+
+void Level::update(const float dt) {
+    player.update(dt);
+    for (auto& box: boxes) {
+        box.update(dt);
+    }
+}
+
+const std::vector<Box>& Level::getBoxes() const{
+    return boxes;
+}
+const Player& Level::getPlayer() const{
+    return player;
+}
+const Map& Level::getMap() const{
+    return map;
 }

@@ -73,5 +73,8 @@ void MenuState::draw(sf::RenderWindow &window) {
     renderer.render(window, options, selectedOption, hasSave);
 }
 
+void MenuState::update(float dt) {}
+
+
 
 
