@@ -36,14 +36,16 @@ void Level::loadLevelData(const std::string& path) {
             if (map.getTile(x, y) == Tile::Box) {
                 boxes.emplace_back(sf::Vector2i(x, y));
                 map.setTile(x, y, Tile::Empty);
-            }
-            if (map.getTile(x, y) == Tile::Player) {
+            } else if (map.getTile(x, y) == Tile::Player) {
                 player.setPosition({x, y});
                 player.syncVisualPosition();
                 map.setTile(x, y, Tile::Empty);
-            }
-            if (map.getTile(x, y) == Tile::Target) {
+            } else if (map.getTile(x, y) == Tile::Target) {
                 targets.emplace_back(x, y);
+            } else if (map.getTile(x, y) == Tile::BoxOnTarget) {
+                boxes.emplace_back(sf::Vector2i(x, y));
+                targets.emplace_back(x, y);
+                map.setTile(x, y, Tile::Target);
             }
         }
     }

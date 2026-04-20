@@ -13,6 +13,8 @@ MenuState::MenuState(StateManager& manager, sf::RenderWindow& window): manager(m
     hasSave = std::filesystem::exists("save.txt");
 
     auto& audio = manager.getAudio();
+    audio.loadSound("click", "audio/click.wav");
+    audio.loadSound("select", "audio/select.wav");
     audio.startMusic("audio/menu.ogg", 20.0f);
 }
 
@@ -20,6 +22,7 @@ void MenuState::handleInput(sf::RenderWindow &window) {
     while (const std::optional event = window.pollEvent()) {
         if (event->is<sf::Event::Closed>()) window.close();
         if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
+            auto& audio = manager.getAudio();
             if (keyPressed->code == sf::Keyboard::Key::W) {
                 if (selectedOption == 0) {
                     selectedOption = options.size() - 1;
@@ -29,6 +32,7 @@ void MenuState::handleInput(sf::RenderWindow &window) {
                         selectedOption--;
                     }
                 }
+                audio.playSound("click", 15.f);
             }
             if (keyPressed->code == sf::Keyboard::Key::S) {
                 if (selectedOption == options.size() - 1) {
@@ -39,9 +43,11 @@ void MenuState::handleInput(sf::RenderWindow &window) {
                         selectedOption++;
                     }
                 }
+                audio.playSound("click", 15.f);
             }
             if (keyPressed->code == sf::Keyboard::Key::Enter) {
                 auto& m = manager;
+                audio.playSound("select", 15.f);
                 switch (selectedOption) {
                     case 0:
                         m.changeState(std::make_unique<PlayState>(m, window, "levels/level01.txt"));

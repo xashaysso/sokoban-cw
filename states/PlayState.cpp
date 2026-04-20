@@ -14,7 +14,7 @@ PlayState::PlayState(StateManager& manager, sf::RenderWindow& window, std::strin
     winStatePushed = false;
     audio.loadSound("walk", "audio/footstep.wav");
     audio.loadSound("push", "audio/box.wav");
-    audio.startMusic("audio/game.ogg",20.0f);
+    audio.startMusic("audio/game.ogg",30.0f);
 }
 
 void PlayState::initWindow(sf::RenderWindow& window) const {

@@ -5,7 +5,11 @@
 
 #include "MenuState.h"
 
-WinState::WinState(StateManager &manager, const int steps, const float time, const bool isLast, std::function<void()> onConfirm): manager(manager), finalSteps(steps), finalTime(time), lastLevel(isLast), onConfirm(std::move(onConfirm)) {}
+WinState::WinState(StateManager &manager, const int steps, const float time, const bool isLast, std::function<void()> onConfirm): manager(manager), finalSteps(steps), finalTime(time), lastLevel(isLast), onConfirm(std::move(onConfirm)) {
+    auto& audio = manager.getAudio();
+    audio.loadSound("win", "audio/win.wav");
+    audio.playSound("win", 60.0f);
+}
 
 
 void WinState::draw(sf::RenderWindow &window) {
