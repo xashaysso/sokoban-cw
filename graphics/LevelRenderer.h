@@ -16,9 +16,9 @@ class LevelRenderer {
         std::map<Tile, sf::Texture> textures;
         std::unique_ptr<sf::Sprite> sprite;
         sf::Text stepsText;
-        sf::Text winText;
+        sf::Text timeText;
         LevelRenderer();
-        void render(sf::RenderWindow& window, const Level& level);
+        void render(sf::RenderWindow& window, const Level& level, float elapsedTime);
     private:
         void draw(sf::RenderWindow& window, const Level& level);
         void drawObject(sf::RenderWindow& window, sf::Vector2f pixelPos, Tile type);

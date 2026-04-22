@@ -23,6 +23,9 @@ WinRenderer::WinRenderer() : titleText(font), statsText(font), hintText(font) {
 }
 
 void WinRenderer::render(sf::RenderWindow &window, int steps, float time, bool isLastLevel) {
+    sf::View gameView = window.getView();
+    window.setView(window.getDefaultView());
+
     overlay.setSize(sf::Vector2f(window.getSize()));
     window.draw(overlay);
 
@@ -55,5 +58,7 @@ void WinRenderer::render(sf::RenderWindow &window, int steps, float time, bool i
     window.draw(titleText);
     window.draw(statsText);
     window.draw(hintText);
+
+    window.setView(gameView);
 }
 

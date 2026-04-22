@@ -11,6 +11,9 @@ PauseRenderer::PauseRenderer() {
 }
 
 void PauseRenderer::render(sf::RenderWindow &window, std::vector<std::string>& options, int selectedOption) const {
+    sf::View gameView = window.getView();
+    window.setView(window.getDefaultView());
+
     sf::RectangleShape overlay;
     overlay.setSize(sf::Vector2f(window.getSize()));
     overlay.setFillColor(sf::Color(0, 0, 0, 150));
@@ -20,7 +23,7 @@ void PauseRenderer::render(sf::RenderWindow &window, std::vector<std::string>& o
     float windowWidth = static_cast<float>(window.getSize().x);
     float windowHeight = static_cast<float>(window.getSize().y);
 
-    unsigned int fontSize = static_cast<unsigned int>(windowHeight * 0.12f);
+    unsigned int fontSize = static_cast<unsigned int>(windowHeight * 0.07f);
     float spacing = fontSize * 1.75f;
     float totalBlockHeight = (options.size() - 1) * spacing;
 
@@ -42,4 +45,5 @@ void PauseRenderer::render(sf::RenderWindow &window, std::vector<std::string>& o
         text.setFillColor(i == selectedOption ? sf::Color::Red : sf::Color::White);
         window.draw(text);
     }
+    window.setView(gameView);
 }

@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-LevelRenderer::LevelRenderer() : stepsText(font), winText(font) {
+LevelRenderer::LevelRenderer() : stepsText(font), timeText(font){
     loadTextures();
     sprite = std::make_unique<sf::Sprite>(textures[Tile::Empty]);
     if (!font.openFromFile("fonts/font.ttf")) {
@@ -13,21 +13,42 @@ LevelRenderer::LevelRenderer() : stepsText(font), winText(font) {
     stepsText.setFillColor(sf::Color::White);
     stepsText.setPosition({10.f, 10.f});
 
-    winText.setString("LEVEL COMPLETED!\nPress ENTER for Next");
-    winText.setCharacterSize(42);
-    winText.setFillColor(sf::Color::Yellow);
-    winText.setOutlineColor(sf::Color::Black);
-    winText.setOutlineThickness(2.f);
+    timeText.setCharacterSize(24);
+    timeText.setFillColor(sf::Color::White);
+    timeText.setPosition({10.f, 10.f});
 }
 
-void LevelRenderer::render(sf::RenderWindow &window, const Level &level) {
+void LevelRenderer::render(sf::RenderWindow &window, const Level &level, float elapsedTime) {
     window.clear(sf::Color(30, 30, 30));
-    const auto& map = level.getMap();
-
     draw(window, level);
 
     stepsText.setString("Steps: " + std::to_string(level.getSteps()));
+
+    int totalSeconds = static_cast<int>(elapsedTime);
+    int minutes = totalSeconds / 60;
+    int seconds = totalSeconds % 60;
+
+    std::ostringstream timeStream;
+    timeStream << "Time: "
+               << std::setfill('0') << std::setw(2) << minutes << ":"
+               << std::setfill('0') << std::setw(2) << seconds;
+
+    timeText.setString(timeStream.str());
+
+    float padding = 10.0f;
+    float windowWidth = static_cast<float>(window.getSize().x);
+    sf::FloatRect textBounds = timeText.getLocalBounds();
+
+    timeText.setPosition({
+        windowWidth - textBounds.size.x - padding,
+        padding
+    });
+
+    sf::View gameView = window.getView();
+    window.setView(window.getDefaultView());
     window.draw(stepsText);
+    window.draw(timeText);
+    window.setView(gameView);
 }
 void LevelRenderer::drawObject(sf::RenderWindow &window, sf::Vector2f pixelPos, Tile type) {
     sprite->setTexture(textures[type]);

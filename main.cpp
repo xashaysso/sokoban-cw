@@ -11,7 +11,7 @@ int main()
         StateManager manager;
         sf::Clock clock;
 
-        sf::RenderWindow window(sf::VideoMode({800u, 600u}), "Evanescence", sf::Style::Titlebar | sf::Style::Close);
+        sf::RenderWindow window(sf::VideoMode({1024u, 768u}), "Sokoban", sf::Style::Titlebar | sf::Style::Close);
         window.setFramerateLimit(60);
 
         manager.pushState(std::make_unique<MenuState>(manager, window));

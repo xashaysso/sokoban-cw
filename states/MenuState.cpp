@@ -6,8 +6,14 @@
 
 MenuState::MenuState(StateManager& manager, sf::RenderWindow& window): manager(manager), selectedOption(0) {
     options = {"NEW GAME", "CONTINUE", "EXIT"};
-    window.setSize({800u, 600u});
-    sf::View view(sf::FloatRect({0.f, 0.f}, {800.f, 600.f}));
+
+    window.setSize({1024u, 768u});
+    auto desktop = sf::VideoMode::getDesktopMode();
+    window.setPosition(sf::Vector2i(
+        (desktop.size.x - 1024) / 2,
+        (desktop.size.y - 768) / 2
+    ));
+    sf::View view(sf::FloatRect({0.f, 0.f}, {1024.f, 768.f}));
     window.setView(view);
 
     hasSave = std::filesystem::exists("save.txt");

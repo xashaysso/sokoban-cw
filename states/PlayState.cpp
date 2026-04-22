@@ -18,13 +18,19 @@ PlayState::PlayState(StateManager& manager, sf::RenderWindow& window, std::strin
 }
 
 void PlayState::initWindow(sf::RenderWindow& window) const {
-    unsigned int newWidth = level.getWidth() * tileSize;
-    unsigned int newHeight = level.getHeight() * tileSize;
+    window.setSize({1024u, 768u});
 
-    window.setSize({newWidth, newHeight});
-    const sf::View newView(sf::FloatRect({0.f, 0.f}, {static_cast<float>(newWidth), static_cast<float>(newHeight)}));
+    float levelWidth = static_cast<float>(level.getWidth() * tileSize);
+    float levelHeight = static_cast<float>(level.getHeight() * tileSize);
+
+    auto desktop = sf::VideoMode::getDesktopMode();
+    window.setPosition(sf::Vector2i(
+        (desktop.size.x - 1024) / 2,
+        (desktop.size.y - 768) / 2
+    ));
+    sf::View newView(sf::FloatRect({0.f, 0.f}, {1024.f, 768.f}));
+    newView.setCenter({levelWidth / 2.0f, levelHeight / 2.0f});
     window.setView(newView);
-    std::cout << "Window resized to: " << newWidth << ", " << newHeight << std::endl;
 }
 
 
@@ -55,7 +61,8 @@ void PlayState::handleInput(sf::RenderWindow &window){
 }
 
 void PlayState::draw(sf::RenderWindow &window){
-    renderer.render(window, level);
+    float currentTime = levelClock.getElapsedTime().asSeconds();
+    renderer.render(window, level, currentTime);
 }
 
 void PlayState::update(const float dt){
