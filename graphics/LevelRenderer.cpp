@@ -9,11 +9,11 @@ LevelRenderer::LevelRenderer() : stepsText(font), timeText(font){
         std::cerr << "Failed to load font." << std::endl;
     }
 
-    stepsText.setCharacterSize(24);
+    stepsText.setCharacterSize(28);
     stepsText.setFillColor(sf::Color::White);
     stepsText.setPosition({10.f, 10.f});
 
-    timeText.setCharacterSize(24);
+    timeText.setCharacterSize(28);
     timeText.setFillColor(sf::Color::White);
     timeText.setPosition({10.f, 10.f});
 }
