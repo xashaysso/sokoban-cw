@@ -4,6 +4,7 @@ Box::Box(const sf::Vector2i startPos) {
     position = startPos;
     visualPosition = { static_cast<float>(startPos.x) * 64.f, static_cast<float>(startPos.y) * 64.f };
     visualSpeed = 25.0f;
+    isOnTarget = false;
 }
 
 void Box::setPosition(const sf::Vector2i newPosition) {
@@ -36,4 +37,19 @@ bool Box::isMoving() const {
     return (std::abs(visualPosition.x - targetPos.x) > 1.0f ||
             std::abs(visualPosition.y - targetPos.y) > 1.0f);
 }
+
+void Box::setOnTarget() {
+    isOnTarget = true;
+}
+
+bool Box::getOnTarget() const {
+    return isOnTarget;
+}
+
+void Box::setOffTarget() {
+    isOnTarget = false;
+}
+
+
+
 

@@ -49,6 +49,7 @@ void Level::loadLevelData(const std::string& path) {
             }
         }
     }
+    changeBoxStates();
     std::cout << "Level successfully initialized/reset" << std::endl;
 }
 
@@ -88,6 +89,9 @@ MoveResult Level::movePlayer(Direction dir) {
     if (moveResult != MoveResult::None) {
         moves.push(currState);
         steps++;
+    }
+    if (moveResult == MoveResult::Push) {
+        changeBoxStates();
     }
     return moveResult;
 }
@@ -130,7 +134,8 @@ MoveResult Level::handleInput(const sf::Keyboard::Key key) {
         case sf::Keyboard::Key::R:
             restart();
             return MoveResult::None;
-        case sf::Keyboard::Key::Z: undo();
+        case sf::Keyboard::Key::Z:
+            undo();
             return MoveResult::None;
         default:
             return MoveResult::None;
@@ -143,6 +148,7 @@ void Level::restart() {
     for (auto& box : boxes) {
         box.syncVisualPosition();
     }
+    changeBoxStates();
 }
 
 int Level::getSteps() const {
@@ -220,6 +226,7 @@ void Level::undo() {
     for (auto& box : boxes) {
         box.syncVisualPosition();
     }
+    changeBoxStates();
 }
 
 void Level::saveProgress(const int currentLevelIndex) {
@@ -268,3 +275,15 @@ bool Level::isAnimating() const {
 int Level::getCurrentLevelIndex() const {
     return currentLevel;
 }
+
+void Level::changeBoxStates(){
+    for (auto& box : boxes) {
+        box.setOffTarget();
+        for (const auto& target : targets) {
+            if (box.getPosition().x == target.x && box.getPosition().y == target.y) {
+                box.setOnTarget();
+            }
+        }
+    }
+}
+

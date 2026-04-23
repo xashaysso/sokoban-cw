@@ -17,7 +17,8 @@ set(SFML_BUILD_EXAMPLES OFF)
 
 FetchContent_MakeAvailable(SFML)
 
-add_executable(cw main.cpp
+add_executable(cw WIN32 main.cpp
+        resource.rc
         entities/Player.cpp
         entities/Box.cpp
         core/Map.cpp
@@ -30,13 +31,9 @@ add_executable(cw main.cpp
         states/PauseState.cpp
         graphics/PauseRenderer.cpp
         core/AudioManager.cpp
-        core/AudioManager.h
         states/WinState.cpp
-        states/WinState.h
         graphics/WinRenderer.cpp
-        graphics/WinRenderer.h
         states/ControlsState.cpp
-        states/ControlsState.h
 )
 
 target_link_libraries(cw PRIVATE sfml-graphics sfml-window sfml-system sfml-audio)

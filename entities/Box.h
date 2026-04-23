@@ -12,9 +12,14 @@ class Box {
         sf::Vector2f getVisualPosition() const;
         void syncVisualPosition();
         bool isMoving() const;
+        void setOnTarget();
+        void setOffTarget();
+        bool getOnTarget() const;
+
     private:
         sf::Vector2i position;
 
         sf::Vector2f visualPosition;
         float visualSpeed;
+        bool isOnTarget;
 };

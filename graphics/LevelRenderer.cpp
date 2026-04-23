@@ -72,7 +72,11 @@ void LevelRenderer::draw(sf::RenderWindow &window, const Level& level) {
         }
     }
     for (auto& box : boxes) {
-        drawObject(window, box.getVisualPosition(), Tile::Box);
+        if (box.getOnTarget()) {
+            drawObject(window, box.getVisualPosition(), Tile::BoxOnTarget);
+        } else {
+            drawObject(window, box.getVisualPosition(), Tile::Box);
+        }
     }
     drawObject(window, player.getVisualPosition(), Tile::Player);
 }
@@ -83,6 +87,7 @@ void LevelRenderer::loadTextures() {
         {Tile::Wall,   "assets/wall.png"},
         {Tile::Empty,  "assets/floor.png"},
         {Tile::Box,    "assets/box.png"},
+        {Tile::BoxOnTarget, "assets/targetBox.png"},
         {Tile::Player, "assets/player.png"},
         {Tile::Target, "assets/target.png"},
         {Tile::Void,   "assets/void.png"},

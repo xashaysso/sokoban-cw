@@ -42,6 +42,8 @@ class Level {
         std::vector<std::string> getLevelPaths() const;
         bool isAnimating() const;
         int getCurrentLevelIndex() const;
+
+        void changeBoxStates();
     private:
         Map map;
         Player player;
