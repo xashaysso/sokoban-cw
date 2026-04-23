@@ -113,12 +113,20 @@ int Level::getHeight() const {
     return map.getHeight();
 }
 
-MoveResult Level::handleInput(const sf::Keyboard::Key key, sf::RenderWindow& window) {
+MoveResult Level::handleInput(const sf::Keyboard::Key key) {
     switch (key) {
-        case sf::Keyboard::Key::W: return movePlayer(Direction::Up);
-        case sf::Keyboard::Key::S: return movePlayer(Direction::Down);
-        case sf::Keyboard::Key::A: return movePlayer(Direction::Left);
-        case sf::Keyboard::Key::D: return movePlayer(Direction::Right);
+        case sf::Keyboard::Key::W:
+        case sf::Keyboard::Key::Up:
+            return movePlayer(Direction::Up);
+        case sf::Keyboard::Key::S:
+        case sf::Keyboard::Key::Down:
+            return movePlayer(Direction::Down);
+        case sf::Keyboard::Key::A:
+        case sf::Keyboard::Key::Left:
+            return movePlayer(Direction::Left);
+        case sf::Keyboard::Key::D:
+        case sf::Keyboard::Key::Right:
+            return movePlayer(Direction::Right);
         case sf::Keyboard::Key::R:
             restart();
             return MoveResult::None;
