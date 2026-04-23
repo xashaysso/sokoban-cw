@@ -44,7 +44,7 @@ void PlayState::handleInput(sf::RenderWindow &window){
                 manager.pushState(std::make_unique<PauseState>(manager));
                 return;
             }
-            MoveResult result = level.handleInput(keyPressed->code, window);
+            MoveResult result = level.handleInput(keyPressed->code);
             auto& audio = manager.getAudio();
             switch (result) {
                 case MoveResult::Walk:
