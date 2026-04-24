@@ -148,7 +148,6 @@ void Level::restart() {
     for (auto& box : boxes) {
         box.syncVisualPosition();
     }
-    changeBoxStates();
 }
 
 int Level::getSteps() const {

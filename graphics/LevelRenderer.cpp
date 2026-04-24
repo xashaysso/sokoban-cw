@@ -18,9 +18,9 @@ LevelRenderer::LevelRenderer() : stepsText(font), timeText(font){
     timeText.setPosition({10.f, 10.f});
 }
 
-void LevelRenderer::render(sf::RenderWindow &window, const Level &level, float elapsedTime) {
+void LevelRenderer::render(sf::RenderWindow &window, const Level &level, float elapsedTime, bool xrayMode) {
     window.clear(sf::Color(30, 30, 30));
-    draw(window, level);
+    draw(window, level, xrayMode);
 
     stepsText.setString("Steps: " + std::to_string(level.getSteps()));
 
@@ -50,13 +50,14 @@ void LevelRenderer::render(sf::RenderWindow &window, const Level &level, float e
     window.draw(timeText);
     window.setView(gameView);
 }
-void LevelRenderer::drawObject(sf::RenderWindow &window, sf::Vector2f pixelPos, Tile type) {
+void LevelRenderer::drawObject(sf::RenderWindow &window, sf::Vector2f pixelPos, Tile type, sf::Color color) {
     sprite->setTexture(textures[type]);
     sprite->setPosition(pixelPos);
+    sprite->setColor(color);
     window.draw(*sprite);
 }
 
-void LevelRenderer::draw(sf::RenderWindow &window, const Level& level) {
+void LevelRenderer::draw(sf::RenderWindow &window, const Level& level, bool xrayMode) {
     const auto& map = level.getMap();
     const auto& player = level.getPlayer();
     const auto& boxes = level.getBoxes();
@@ -64,21 +65,22 @@ void LevelRenderer::draw(sf::RenderWindow &window, const Level& level) {
     for (int y = 0; y < map.getHeight(); y++) {
         for (int x = 0; x < map.getWidth(); x++) {
             constexpr float tileSize = 64.0f;
-            drawObject(window, {x * tileSize, y * tileSize}, Tile::Empty);
+            drawObject(window, {x * tileSize, y * tileSize}, Tile::Empty, sf::Color::White);
             Tile type = map.getTile(x, y);
             if (type != Tile::Empty) {
-                drawObject(window, {x * tileSize, y * tileSize}, type);
+                drawObject(window, {x * tileSize, y * tileSize}, type, sf::Color::White);
             }
         }
     }
     for (auto& box : boxes) {
+        sf::Color boxColor = xrayMode ? sf::Color(255, 255, 255, 100) : sf::Color::White;
         if (box.getOnTarget()) {
-            drawObject(window, box.getVisualPosition(), Tile::BoxOnTarget);
+            drawObject(window, box.getVisualPosition(), Tile::BoxOnTarget, boxColor);
         } else {
-            drawObject(window, box.getVisualPosition(), Tile::Box);
+            drawObject(window, box.getVisualPosition(), Tile::Box, boxColor);
         }
     }
-    drawObject(window, player.getVisualPosition(), Tile::Player);
+    drawObject(window, player.getVisualPosition(), Tile::Player, sf::Color::White);
 }
 
 
