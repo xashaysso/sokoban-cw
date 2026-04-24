@@ -62,7 +62,8 @@ void PlayState::handleInput(sf::RenderWindow &window){
 
 void PlayState::draw(sf::RenderWindow &window){
     float currentTime = levelClock.getElapsedTime().asSeconds();
-    renderer.render(window, level, currentTime);
+    bool isTabPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Tab);
+    renderer.render(window, level, currentTime, isTabPressed);
 }
 
 void PlayState::update(const float dt){

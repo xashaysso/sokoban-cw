@@ -15,6 +15,7 @@ ControlsState::ControlsState(StateManager&manager): manager(manager), helpText(f
         "WASD / Arrows - Move\n"
         "Z - Undo Move\n"
         "R - Restart Level\n"
+        "TAB - Xray\n"
         "ESC - Pause Game\n\n"
         "Press any key to return..."
     );

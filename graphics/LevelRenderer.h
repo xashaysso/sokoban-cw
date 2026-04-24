@@ -18,9 +18,9 @@ class LevelRenderer {
         sf::Text stepsText;
         sf::Text timeText;
         LevelRenderer();
-        void render(sf::RenderWindow& window, const Level& level, float elapsedTime);
+        void render(sf::RenderWindow& window, const Level& level, float elapsedTime, bool xrayMode);
     private:
-        void draw(sf::RenderWindow& window, const Level& level);
-        void drawObject(sf::RenderWindow& window, sf::Vector2f pixelPos, Tile type);
+        void draw(sf::RenderWindow& window, const Level& level, bool xrayMode);
+        void drawObject(sf::RenderWindow& window, sf::Vector2f pixelPos, Tile type, sf::Color color);
         void loadTextures();
 };
