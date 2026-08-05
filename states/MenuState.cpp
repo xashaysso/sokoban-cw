@@ -30,58 +30,62 @@ void MenuState::handleInput(sf::RenderWindow &window) {
         if (event->is<sf::Event::Closed>()) window.close();
         if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
             auto& audio = manager.getAudio();
-            if (keyPressed->code == sf::Keyboard::Key::W) {
-                if (selectedOption == 0) {
-                    selectedOption = options.size() - 1;
-                } else {
-                    selectedOption--;
-                    if (selectedOption == 1 && !hasSave) {
+            switch (keyPressed->code) {
+                case sf::Keyboard::Key::W:
+                case sf::Keyboard::Key::Up:
+                    if (selectedOption == 0) {
+                        selectedOption = options.size() - 1;
+                    } else {
                         selectedOption--;
-                    }
-                }
-                audio.playSound("click", 15.f);
-            }
-            if (keyPressed->code == sf::Keyboard::Key::S) {
-                if (selectedOption == options.size() - 1) {
-                    selectedOption = 0;
-                } else {
-                    selectedOption++;
-                    if (selectedOption == 1 && !hasSave) {
-                        selectedOption++;
-                    }
-                }
-                audio.playSound("click", 15.f);
-            }
-            if (keyPressed->code == sf::Keyboard::Key::Enter) {
-                auto& m = manager;
-                audio.playSound("select", 15.f);
-                switch (selectedOption) {
-                    case 0:
-                        m.changeState(std::make_unique<PlayState>(m, window, "levels/level01.txt"));
-                        break;
-                    case 1: {
-                        std::ifstream saveFile("save.txt");
-                        std::string levelPath = "levels/level01.txt";
-
-                        if (saveFile.is_open()) {
-                            int levelIndex;
-                            if (saveFile >> levelIndex) {
-                                std::ostringstream ss;
-                                ss << "levels/level" << std::setfill('0') << std::setw(2) << levelIndex << ".txt";
-                                levelPath = ss.str();
-                            }
-                            saveFile.close();
+                        if (selectedOption == 1 && !hasSave) {
+                            selectedOption--;
                         }
-                        m.changeState(std::make_unique<PlayState>(m, window, levelPath));
-                        break;
                     }
-                    case 2:
-                        m.pushState(std::make_unique<ControlsState>(m));
-                        break;
-                    default:
-                        window.close();
-                        break;
-                }
+                    audio.playSound("click", 15.f);
+                    break;
+                case sf::Keyboard::Key::S:
+                case sf::Keyboard::Key::Down:
+                    if (selectedOption == options.size() - 1) {
+                        selectedOption = 0;
+                    } else {
+                        selectedOption++;
+                        if (selectedOption == 1 && !hasSave) {
+                            selectedOption++;
+                        }
+                    }
+                    audio.playSound("click", 15.f);
+                    break;
+                case sf::Keyboard::Key::Enter:
+                    auto& m = manager;
+                    audio.playSound("select", 15.f);
+                    switch (selectedOption) {
+                        case 0:
+                            m.changeState(std::make_unique<PlayState>(m, window, "levels/level01.txt"));
+                            break;
+                        case 1: {
+                            std::ifstream saveFile("save.txt");
+                            std::string levelPath = "levels/level01.txt";
+
+                            if (saveFile.is_open()) {
+                                int levelIndex;
+                                if (saveFile >> levelIndex) {
+                                    std::ostringstream ss;
+                                    ss << "levels/level" << std::setfill('0') << std::setw(2) << levelIndex << ".txt";
+                                    levelPath = ss.str();
+                                }
+                                saveFile.close();
+                            }
+                            m.changeState(std::make_unique<PlayState>(m, window, levelPath));
+                            break;
+                        }
+                        case 2:
+                            m.pushState(std::make_unique<ControlsState>(m));
+                            break;
+                        default:
+                            window.close();
+                            break;
+                    }
+                    break;
             }
         }
     }

@@ -2,8 +2,6 @@
 #include "AppState.h"
 #include "../core/StateManager.h"
 #include "../graphics/WinRenderer.h"
-#include "SFML/Graphics/RectangleShape.hpp"
-#include "SFML/Graphics/Text.hpp"
 
 
 class WinState: public AppState {
