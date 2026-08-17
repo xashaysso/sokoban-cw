@@ -34,3 +34,16 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
     time,
     created_at
 )
+
+struct UserStatsResponse {
+    int level_id;
+    int steps;
+    int time;
+};
+
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
+    UserStatsResponse,
+    level_id,
+    steps,
+    time
+)

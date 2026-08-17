@@ -63,3 +63,30 @@ void NetworkManager::getLevelStats(const int levelId, const std::function<void(b
     cpr::Url{url},
     cpr::Timeout{3000});
 }
+
+void NetworkManager::getUserStats(const std::string& username, const std::function<void(bool success, const std::vector<UserStatsResponse>& stats)>& callback) const {
+    std::string url = m_baseUrl + "/" + username + "/records";
+
+    cpr::GetCallback([callback, url](const cpr::Response& response) {
+        bool success = (response.status_code == 200);
+        std::vector<UserStatsResponse> result;
+
+        if (success) {
+            try {
+                const auto json = nlohmann::json::parse(response.text);
+                result = json.get<std::vector<UserStatsResponse>>();
+            } catch (const std::exception& e){
+                std::cerr << "JSON parse err: " << e.what() << std::endl;
+                success = false;
+            }
+        } else {
+            std::cerr << "GET " << url << " failed. Code: " << response.status_code
+                << ", Error: " << response.error.message << std::endl;
+        }
+        if (callback) {
+            callback(success, result);
+        }
+    },
+    cpr::Url{url},
+    cpr::Timeout{3000});
+}
