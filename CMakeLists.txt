@@ -17,7 +17,24 @@ set(SFML_BUILD_EXAMPLES OFF)
 
 FetchContent_MakeAvailable(SFML)
 
-add_executable(cw WIN32 main.cpp
+FetchContent_Declare(
+        nlohmann_json
+        GIT_REPOSITORY https://github.com/nlohmann/json.git
+        GIT_TAG        v3.12.0
+)
+FetchContent_MakeAvailable(nlohmann_json)
+
+FetchContent_Declare(
+        cpr
+        GIT_REPOSITORY https://github.com/libcpr/cpr.git
+        GIT_TAG        1.14.2
+)
+set(CPR_CURL_USE_LIBPSL OFF CACHE BOOL "" FORCE)
+set(CURL_USE_LIBPSL OFF CACHE BOOL "" FORCE)
+set(CPR_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(cpr)
+
+add_executable(cw main.cpp
         resource.rc
         entities/Player.cpp
         entities/Box.cpp
@@ -34,9 +51,15 @@ add_executable(cw WIN32 main.cpp
         states/WinState.cpp
         graphics/WinRenderer.cpp
         states/ControlsState.cpp
+        network/NetworkManager.cpp
+        states/UsernameInputState.cpp
+        states/UsernameInputState.h
+        states/UsernameInputState.h
+        graphics/UsernameInputRenderer.cpp
+        graphics/UsernameInputRenderer.h
 )
 
-target_link_libraries(cw PRIVATE sfml-graphics sfml-window sfml-system sfml-audio)
+target_link_libraries(cw PRIVATE sfml-graphics sfml-window sfml-system sfml-audio cpr::cpr nlohmann_json::nlohmann_json)
 
 if(WIN32)
     add_custom_command(TARGET cw POST_BUILD
@@ -44,6 +67,9 @@ if(WIN32)
             $<TARGET_FILE:sfml-graphics>
             $<TARGET_FILE:sfml-window>
             $<TARGET_FILE:sfml-system>
+            $<TARGET_FILE:sfml-audio>
+            $<TARGET_FILE:cpr::cpr>
+            $<TARGET_FILE:libcurl>
             $<TARGET_FILE_DIR:cw>
     )
     add_custom_command(TARGET cw POST_BUILD

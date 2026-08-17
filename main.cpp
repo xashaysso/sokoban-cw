@@ -5,6 +5,7 @@
 #include "states/PlayState.h"
 #include "network/NetworkManager.h"
 #include "entities/Stats.h"
+#include "states/UsernameInputState.h"
 
 
 int main()
@@ -16,7 +17,12 @@ int main()
         sf::RenderWindow window(sf::VideoMode({1024u, 768u}), "Sokoban", sf::Style::Titlebar | sf::Style::Close);
         window.setFramerateLimit(60);
 
-        manager.pushState(std::make_unique<MenuState>(manager, window));
+        std::string username = UsernameInputState::loadUsername();
+        if (username.empty()) {
+            manager.pushState(std::make_unique<UsernameInputState>(manager, window));
+        } else {
+            manager.pushState(std::make_unique<MenuState>(manager, window));
+        }
 
         NetworkManager net("http://localhost:8080");
 
