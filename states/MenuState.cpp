@@ -17,12 +17,34 @@ MenuState::MenuState(StateManager& manager, sf::RenderWindow& window): manager(m
     sf::View view(sf::FloatRect({0.f, 0.f}, {1024.f, 768.f}));
     window.setView(view);
 
-    hasSave = std::filesystem::exists("save.json");
+    hasSave = hasSaveProgress();
 
     auto& audio = manager.getAudio();
     audio.loadSound("click", "audio/click.wav");
     audio.loadSound("select", "audio/select.wav");
     audio.startMusic("audio/menu.ogg", 20.0f);
+}
+
+bool MenuState::hasSaveProgress() {
+    if (!std::filesystem::exists("save.json")) {
+        return false;
+    }
+
+    try {
+        std::ifstream inFile("save.json");
+        if (!inFile.is_open()) {
+            return false;
+        }
+
+        nlohmann::json saveData;
+        inFile >> saveData;
+
+        return saveData.contains("level_index") &&
+               saveData["level_index"].is_number_integer() &&
+               saveData["level_index"].get<int>() > 1;
+    } catch (...) {
+        return false;
+    }
 }
 
 void MenuState::handleInput(sf::RenderWindow &window) {

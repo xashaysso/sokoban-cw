@@ -11,6 +11,7 @@ public:
         void handleInput(sf::RenderWindow &window) override;
         void draw(sf::RenderWindow &window) override;
         void update(float dt) override;
+        static bool hasSaveProgress();
 private:
         StateManager& manager;
         MenuRenderer renderer;
