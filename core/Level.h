@@ -5,6 +5,7 @@
 #include <stack>
 #include <iostream>
 #include <algorithm>
+#include <nlohmann/json.hpp>
 
 #include "SFML/Window/Keyboard.hpp"
 #include "SFML/Graphics/RenderWindow.hpp"
@@ -36,6 +37,9 @@ class Level {
         const std::vector<Box>& getBoxes() const;
 
         static void saveProgress(int currentLevelIndex);
+        static int loadProgress();
+        static std::string getSavePath();
+
         void update(float dt);
         bool isLastLevel() const;
 

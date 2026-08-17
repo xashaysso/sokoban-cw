@@ -2,6 +2,8 @@
 
 #include <fstream>
 
+#include "nlohmann/adl_serializer.hpp"
+
 namespace fs = std::filesystem;
 
 Level::Level(const std::string &filePath) : map(filePath), player(map.getStartCoordinates()) {
@@ -229,11 +231,49 @@ void Level::undo() {
 }
 
 void Level::saveProgress(const int currentLevelIndex) {
-    if (std::ofstream saveFile("save.txt"); saveFile.is_open()) {
-        saveFile << currentLevelIndex;
-        saveFile.close();
+    nlohmann::json saveData;
+
+    if (std::ifstream inFile("save.json"); inFile.is_open()) {
+        try {
+            inFile >> saveData;
+        } catch (const std::exception& e){
+            std::cerr << "Warning: failed to parse save.json, creating new: " << e.what() << std::endl;
+        }
+    }
+
+    saveData["level_index"] = currentLevelIndex;
+    if (!saveData.contains("username")) {
+        saveData["username"] = "Anonymous";
+    }
+
+    if (std::ofstream outFile("save.json"); outFile.is_open()) {
+        outFile << saveData.dump(4);
     }
 }
+
+int Level::loadProgress() {
+    if (std::ifstream inFile("save.json"); inFile.is_open()) {
+        try {
+            nlohmann::json saveData;
+            inFile >> saveData;
+            if (saveData.contains("level_index") && saveData["level_index"].is_number()) {
+                return saveData["level_index"].get<int>();
+            }
+        } catch (std::exception& e) {
+            std::cerr << "Failed to load progress: " << e.what() <<std::endl;
+        }
+    }
+    return 1;
+}
+
+std::string Level::getSavePath() {
+    int levelIndex = Level::loadProgress();
+
+    std::ostringstream ss;
+    ss << "levels/level" << std::setfill('0') << std::setw(2) << levelIndex << ".txt";
+    return ss.str();
+}
+
 
 void Level::update(const float dt) {
     player.update(dt);

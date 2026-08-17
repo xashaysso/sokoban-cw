@@ -17,7 +17,7 @@ MenuState::MenuState(StateManager& manager, sf::RenderWindow& window): manager(m
     sf::View view(sf::FloatRect({0.f, 0.f}, {1024.f, 768.f}));
     window.setView(view);
 
-    hasSave = std::filesystem::exists("save.txt");
+    hasSave = std::filesystem::exists("save.json");
 
     auto& audio = manager.getAudio();
     audio.loadSound("click", "audio/click.wav");
@@ -63,19 +63,7 @@ void MenuState::handleInput(sf::RenderWindow &window) {
                             m.changeState(std::make_unique<PlayState>(m, window, "levels/level01.txt"));
                             break;
                         case 1: {
-                            std::ifstream saveFile("save.txt");
-                            std::string levelPath = "levels/level01.txt";
-
-                            if (saveFile.is_open()) {
-                                int levelIndex;
-                                if (saveFile >> levelIndex) {
-                                    std::ostringstream ss;
-                                    ss << "levels/level" << std::setfill('0') << std::setw(2) << levelIndex << ".txt";
-                                    levelPath = ss.str();
-                                }
-                                saveFile.close();
-                            }
-                            m.changeState(std::make_unique<PlayState>(m, window, levelPath));
+                            m.changeState(std::make_unique<PlayState>(m, window, Level::getSavePath()));
                             break;
                         }
                         case 2:
