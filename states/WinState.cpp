@@ -4,16 +4,48 @@
 #include <utility>
 
 #include "MenuState.h"
+#include "UsernameInputState.h"
 
-WinState::WinState(StateManager &manager, const int steps, const float time, const bool isLast, std::function<void()> onConfirm): manager(manager), finalSteps(steps), finalTime(time), lastLevel(isLast), onConfirm(std::move(onConfirm)) {
-    auto& audio = manager.getAudio();
+WinState::WinState(StateManager &manager, const int levelId, const int steps, const float time, const bool isLast, std::function<void()> onConfirm) : manager(
+    manager), levelId(levelId), finalSteps(steps), finalTime(time), lastLevel(isLast), onConfirm(std::move(onConfirm)) {
+    auto &audio = manager.getAudio();
     audio.loadSound("win", "audio/win.wav");
     audio.playSound("win", 60.0f);
+
+    std::string username = UsernameInputState::loadUsername();
+    if (username.empty()) username = "Anonymous";
+
+    LevelStatsRequest req{username, steps, static_cast<int>(time)};
+
+    net.sendLevelStats(levelId, req, [this](bool ok) {
+        if (ok) {
+            std::cout << "Stats sent. Fetching leaderboard..." << std::endl;
+        }
+        net.getLevelStats(this->levelId, [this](bool success, const std::vector<LevelStatsResponse> &stats) {
+            std::lock_guard<std::mutex> lock(this->dataMutex);
+            if (success) {
+                this->leaderboard = stats;
+                this->hasError = false;
+            } else {
+                this->hasError = true;
+            }
+            this->isLoading = false;
+        });
+    });
 }
 
 
 void WinState::draw(sf::RenderWindow &window) {
-    renderer.render(window, finalSteps, finalTime, lastLevel);
+    std::vector<LevelStatsResponse> currentStats;
+    bool loading;
+    bool error;
+    {
+        std::lock_guard<std::mutex> lock(dataMutex);
+        currentStats = leaderboard;
+        loading = isLoading;
+        error = hasError;
+    }
+    renderer.render(window, finalSteps, finalTime, lastLevel, currentStats, loading, error);
 }
 
 void WinState::update(float dt) {}

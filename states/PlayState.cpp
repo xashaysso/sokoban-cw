@@ -85,7 +85,8 @@ void PlayState::update(const float dt){
             }
         };
 
-        manager.pushState(std::make_unique<WinState>(manager, level.getSteps(), finalTime, level.isLastLevel(), nextLevelCallback));
+        const int currentLevel = level.getCurrentLevelIndex() + 1;
+        manager.pushState(std::make_unique<WinState>(manager, currentLevel, level.getSteps(), finalTime, level.isLastLevel(), nextLevelCallback));
     }
     level.update(dt);
 }

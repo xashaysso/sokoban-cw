@@ -24,22 +24,6 @@ int main()
             manager.pushState(std::make_unique<MenuState>(manager, window));
         }
 
-        NetworkManager net("http://localhost:8080");
-
-        // test
-        LevelStatsRequest req{"Player1", 42, 120};
-        net.sendLevelStats(1, req, [&net](bool ok) {
-            if (ok) {
-                std::cout << "POST OK. Fetching stats..." << std::endl;
-
-                net.getLevelStats(1, [](bool success, const auto& stats) {
-                    if (success) {
-                        std::cout << "GET OK. Received data from Go!" << std::endl;
-                    }
-                });
-            }
-        });
-
         while (window.isOpen()) {
             const float dt = clock.restart().asSeconds();
 
