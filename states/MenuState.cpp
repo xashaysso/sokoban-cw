@@ -4,9 +4,10 @@
 
 #include "ControlsState.h"
 #include "PlayState.h"
+#include "StatsState.h"
 
 MenuState::MenuState(StateManager& manager, sf::RenderWindow& window): manager(manager), selectedOption(0) {
-    options = {"NEW GAME", "CONTINUE", "CONTROLS", "EXIT"};
+    options = {"NEW GAME", "CONTINUE", "STATS", "CONTROLS", "EXIT"};
 
     window.setSize({1024u, 768u});
     auto desktop = sf::VideoMode::getDesktopMode();
@@ -88,7 +89,11 @@ void MenuState::handleInput(sf::RenderWindow &window) {
                             m.changeState(std::make_unique<PlayState>(m, window, Level::getSavePath()));
                             break;
                         }
-                        case 2:
+                        case 2: {
+                            m.pushState(std::make_unique<StatsState>(m));
+                            break;
+                        }
+                        case 3:
                             m.pushState(std::make_unique<ControlsState>(m));
                             break;
                         default:

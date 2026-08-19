@@ -65,7 +65,7 @@ void NetworkManager::getLevelStats(const int levelId, const std::function<void(b
 }
 
 void NetworkManager::getUserStats(const std::string& username, const std::function<void(bool success, const std::vector<UserStatsResponse>& stats)>& callback) const {
-    std::string url = m_baseUrl + "/" + username + "/records";
+    std::string url = m_baseUrl + "/players/" + username + "/records";
 
     cpr::GetCallback([callback, url](const cpr::Response& response) {
         bool success = (response.status_code == 200);

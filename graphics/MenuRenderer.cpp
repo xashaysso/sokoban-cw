@@ -15,7 +15,7 @@ void MenuRenderer::render(sf::RenderWindow &window, std::vector<std::string>& op
     float windowHeight = static_cast<float>(window.getSize().y);
 
     auto fontSize = static_cast<unsigned int>(windowHeight * 0.12f);
-    float spacing = fontSize * 1.25f;
+    float spacing = fontSize * 1.f;
 
     float totalBlockHeight = (options.size() - 1) * spacing;
     float startY = (windowHeight / 2.0f) - (totalBlockHeight / 2.0f);

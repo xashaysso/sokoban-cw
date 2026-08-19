@@ -57,6 +57,10 @@ add_executable(cw main.cpp
         states/UsernameInputState.h
         graphics/UsernameInputRenderer.cpp
         graphics/UsernameInputRenderer.h
+        states/StatsState.cpp
+        states/StatsState.h
+        graphics/StatsRenderer.cpp
+        graphics/StatsRenderer.h
 )
 
 target_link_libraries(cw PRIVATE sfml-graphics sfml-window sfml-system sfml-audio cpr::cpr nlohmann_json::nlohmann_json)
