@@ -38,6 +38,8 @@ void PauseState::handleInput(sf::RenderWindow &window) {
                         return;
                     }
                     break;
+                case sf::Keyboard::Key::Escape:
+                    manager.popState();
             }
         }
     }
