@@ -39,6 +39,8 @@ class Level {
         static void saveProgress(int currentLevelIndex);
         static int loadProgress();
         static std::string getSavePath();
+        static int getCurrentLevelIndexFromSave();
+        static int getLevelCount();
 
         void update(float dt);
         bool isLastLevel() const;

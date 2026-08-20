@@ -3,6 +3,7 @@
 #include <fstream>
 
 #include "ControlsState.h"
+#include "LevelSwitcherState.h"
 #include "PlayState.h"
 #include "StatsState.h"
 
@@ -86,7 +87,7 @@ void MenuState::handleInput(sf::RenderWindow &window) {
                             m.changeState(std::make_unique<PlayState>(m, window, "levels/level01.txt"));
                             break;
                         case 1: {
-                            m.changeState(std::make_unique<PlayState>(m, window, Level::getSavePath()));
+                            m.pushState(std::make_unique<LevelSwitcherState>(m));
                             break;
                         }
                         case 2: {

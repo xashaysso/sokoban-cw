@@ -71,7 +71,11 @@ void PlayState::update(const float dt){
         winStatePushed = true;
 
         if (!level.isLastLevel()) {
-            Level::saveProgress(level.getCurrentLevelIndex() + 2);
+            const int currSaved = Level::loadProgress();
+            const int newSaved = level.getCurrentLevelIndex() + 2;
+            if (currSaved < newSaved) {
+                Level::saveProgress(level.getCurrentLevelIndex() + 2);
+            }
         }
         float finalTime = levelClock.getElapsedTime().asSeconds();
         auto nextLevelCallback = [this]() {

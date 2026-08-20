@@ -61,6 +61,10 @@ add_executable(cw main.cpp
         states/StatsState.h
         graphics/StatsRenderer.cpp
         graphics/StatsRenderer.h
+        states/LevelSwitcherState.cpp
+        states/LevelSwitcherState.h
+        graphics/LevelSwitcherRenderer.cpp
+        graphics/LevelSwitcherRenderer.h
 )
 
 target_link_libraries(cw PRIVATE sfml-graphics sfml-window sfml-system sfml-audio cpr::cpr nlohmann_json::nlohmann_json)

@@ -326,3 +326,27 @@ void Level::changeBoxStates(){
     }
 }
 
+namespace fs = std::filesystem;
+
+int Level::getLevelCount() {
+    const fs::path dirPath = "./levels";
+    int fileCount = 0;
+
+    try {
+        if (fs::exists(dirPath) && fs::is_directory(dirPath)) {
+
+            for (const auto& entry : fs::directory_iterator(dirPath)) {
+                if (entry.is_regular_file()) {
+                    fileCount++;
+                }
+            }
+        } else {
+            std::cout << "Path does not exist or is not a directory." << std::endl;
+        }
+    } catch (const fs::filesystem_error& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
+
+    return fileCount;
+}
+
