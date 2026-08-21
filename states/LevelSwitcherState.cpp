@@ -20,7 +20,7 @@ void LevelSwitcherState::handleInput(sf::RenderWindow &window) {
         }
 
         if (const auto* mouseMoved = event->getIf<sf::Event::MouseMoved>()) {
-            sf::Vector2f mousePos = window.mapPixelToCoords(mouseMoved->position);
+            sf::Vector2f mousePos = window.mapPixelToCoords(mouseMoved->position, window.getDefaultView());
             int hoveredIdx = getCardIndexAt(mousePos);
             if (hoveredIdx != -1) {
                 selectedIndex = hoveredIdx;
@@ -29,7 +29,7 @@ void LevelSwitcherState::handleInput(sf::RenderWindow &window) {
 
         if (const auto* mouseBtn = event->getIf<sf::Event::MouseButtonPressed>()) {
             if (mouseBtn->button == sf::Mouse::Button::Left) {
-                sf::Vector2f mousePos = window.mapPixelToCoords(mouseBtn->position);
+                sf::Vector2f mousePos = window.mapPixelToCoords(mouseBtn->position, window.getDefaultView());
                 int clickedIdx = getCardIndexAt(mousePos);
                 if (clickedIdx != -1) {
                     selectedIndex = clickedIdx;
@@ -62,10 +62,10 @@ void LevelSwitcherState::handleInput(sf::RenderWindow &window) {
                     break;
                 case sf::Keyboard::Key::Enter:
                     launchSelectedLevel(window);
-                    break;
+                    return;
                 case sf::Keyboard::Key::Escape:
                     manager.popState();
-                    break;
+                    return;
             }
         }
     }

@@ -53,9 +53,10 @@ void PauseState::handleInput(sf::RenderWindow &window) {
                     break;
                 case sf::Keyboard::Key::Enter:
                     executeOption(window);
-                    break;
+                    return;
                 case sf::Keyboard::Key::Escape:
                     manager.popState();
+                    return;
             }
         }
     }

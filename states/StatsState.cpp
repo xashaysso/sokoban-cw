@@ -51,6 +51,7 @@ void StatsState::handleInput(sf::RenderWindow &window) {
         if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
             if (keyPressed->code == sf::Keyboard::Key::Escape || keyPressed->code == sf::Keyboard::Key::Enter) {
                 manager.popState();
+                return;
             }
         }
     }

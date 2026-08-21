@@ -104,7 +104,7 @@ void MenuState::handleInput(sf::RenderWindow &window) {
                     break;
                 case sf::Keyboard::Key::Enter:
                     executeOption(window);
-                    break;
+                    return;
             }
         }
     }

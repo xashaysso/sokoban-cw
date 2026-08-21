@@ -36,6 +36,8 @@ int main()
             window.clear(sf::Color(30, 30, 30));
             manager.draw(window);
             window.display();
+
+            manager.processPendingChanges();
         }
     }
     catch (const std::exception& err) {

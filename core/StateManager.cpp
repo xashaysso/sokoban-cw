@@ -13,26 +13,61 @@ AppState *StateManager::getCurrentState() const {
 }
 
 void StateManager::pushState(std::unique_ptr<AppState> newState) {
-    states.push_back(std::move(newState));
+    pendingAction = PendingAction::Push;
+    pendingState = std::move(newState);
 }
 
 void StateManager::popState() {
-    if (!states.empty()) {
-        states.pop_back();
-    }
+    pendingAction = PendingAction::Pop;
 }
 
 void StateManager::changeState(std::unique_ptr<AppState> newState) {
-    if (!states.empty()) {
-        states.pop_back();
-    }
-    states.push_back(std::move(newState));
+    pendingAction = PendingAction::Change;
+    pendingState = std::move(newState);
 }
 
 void StateManager::resetToState(std::unique_ptr<AppState> newState) {
-    states.clear();
-    states.push_back(std::move(newState));
+    pendingAction = PendingAction::Reset;
+    pendingState = std::move(newState);
 }
+
+void StateManager::processPendingChanges() {
+    if (pendingAction == PendingAction::None) {
+        return;
+    }
+
+    switch (pendingAction) {
+        case PendingAction::Push:
+            if (pendingState) {
+                states.push_back(std::move(pendingState));
+            }
+            break;
+        case PendingAction::Pop:
+            if (!states.empty()) {
+                states.pop_back();
+            }
+            break;
+        case PendingAction::Change:
+            if (pendingState) {
+                if (!states.empty()) {
+                    states.pop_back();
+                }
+                states.push_back(std::move(pendingState));
+            }
+            break;
+        case PendingAction::Reset:
+            if (pendingState) {
+                states.clear();
+                states.push_back(std::move(pendingState));
+            }
+            break;
+        default:
+            break;
+    }
+    pendingAction = PendingAction::None;
+    pendingState = nullptr;
+}
+
 
 void StateManager::draw(sf::RenderWindow& window) const {
     for (auto &state : states) {

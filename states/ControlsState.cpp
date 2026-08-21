@@ -57,6 +57,7 @@ void ControlsState::handleInput(sf::RenderWindow &window) {
         if (event->is<sf::Event::Closed>()) window.close();
         if (event->is<sf::Event::KeyPressed>() || event->is<sf::Event::MouseButtonPressed>()) {
             manager.popState();
+            return;
         }
     }
 }
