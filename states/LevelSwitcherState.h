@@ -15,6 +15,9 @@ private:
     StateManager& manager;
     LevelSwitcherRenderer renderer;
 
+    void launchSelectedLevel(sf::RenderWindow& window);
+    int getCardIndexAt(sf::Vector2f mousePos) const;
+
     int totalLevels;
     int unlockedLevel = 1;
     int selectedIndex = 0;

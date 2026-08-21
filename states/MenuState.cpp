@@ -52,6 +52,29 @@ bool MenuState::hasSaveProgress() {
 void MenuState::handleInput(sf::RenderWindow &window) {
     while (const std::optional event = window.pollEvent()) {
         if (event->is<sf::Event::Closed>()) window.close();
+
+        if (const auto* mouseMoved = event->getIf<sf::Event::MouseMoved>()) {
+            sf::Vector2f mousePos = window.mapPixelToCoords(mouseMoved->position, window.getDefaultView());
+            int hoveredIdx = renderer.getHoveredOption(mousePos, options, window.getSize());
+            if (hoveredIdx != -1) {
+                if (hoveredIdx != 1 || hasSave) { // 1 = CONTINUE
+                    selectedOption = hoveredIdx;
+                }
+            }
+        }
+
+        if (const auto* mouseBtn = event->getIf<sf::Event::MouseButtonPressed>()) {
+            if (mouseBtn->button == sf::Mouse::Button::Left) {
+                sf::Vector2f mousePos = window.mapPixelToCoords(mouseBtn->position, window.getDefaultView());
+                int clickedIdx = renderer.getHoveredOption(mousePos, options, window.getSize());
+                if (clickedIdx != -1) {
+                    selectedOption = clickedIdx;
+                    executeOption(window);
+                    return;
+                }
+            }
+        }
+
         if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
             auto& audio = manager.getAudio();
             switch (keyPressed->code) {
@@ -80,27 +103,7 @@ void MenuState::handleInput(sf::RenderWindow &window) {
                     audio.playSound("click", 15.f);
                     break;
                 case sf::Keyboard::Key::Enter:
-                    auto& m = manager;
-                    audio.playSound("select", 15.f);
-                    switch (selectedOption) {
-                        case 0:
-                            m.changeState(std::make_unique<PlayState>(m, window, "levels/level01.txt"));
-                            break;
-                        case 1: {
-                            m.pushState(std::make_unique<LevelSwitcherState>(m));
-                            break;
-                        }
-                        case 2: {
-                            m.pushState(std::make_unique<StatsState>(m));
-                            break;
-                        }
-                        case 3:
-                            m.pushState(std::make_unique<ControlsState>(m));
-                            break;
-                        default:
-                            window.close();
-                            break;
-                    }
+                    executeOption(window);
                     break;
             }
         }
@@ -113,6 +116,29 @@ void MenuState::draw(sf::RenderWindow &window) {
 
 void MenuState::update(float dt) {}
 
-
-
-
+void MenuState::executeOption(sf::RenderWindow &window) {
+    auto& audio = manager.getAudio();
+    auto& m = manager;
+    audio.playSound("select", 15.f);
+    switch (selectedOption) {
+        case 0:
+            m.changeState(std::make_unique<PlayState>(m, window, "levels/level01.txt"));
+            break;
+        case 1: {
+            if (hasSave) {
+                m.pushState(std::make_unique<LevelSwitcherState>(m));
+            }
+            break;
+        }
+        case 2: {
+            m.pushState(std::make_unique<StatsState>(m));
+            break;
+        }
+        case 3:
+            m.pushState(std::make_unique<ControlsState>(m));
+            break;
+        default:
+            window.close();
+            break;
+    }
+}

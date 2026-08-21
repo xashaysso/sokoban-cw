@@ -18,4 +18,6 @@ private:
         std::vector<std::string> options;
         int selectedOption;
         bool hasSave;
+
+        void executeOption(sf::RenderWindow& window);
 };

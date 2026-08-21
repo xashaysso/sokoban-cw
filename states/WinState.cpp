@@ -55,6 +55,16 @@ void WinState::handleInput(sf::RenderWindow &window) {
         if (event->is<sf::Event::Closed>()) {
             window.close();
         }
+
+        if (const auto* mouseBtn = event->getIf<sf::Event::MouseButtonPressed>()) {
+            if (mouseBtn->button == sf::Mouse::Button::Left) {
+                auto& m = manager;
+                m.popState();
+                onConfirm();
+                return;
+            }
+        }
+
         if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
             std::cout << "Level completed" << std::endl;
 

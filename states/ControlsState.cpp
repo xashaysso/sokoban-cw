@@ -55,7 +55,7 @@ void ControlsState::draw(sf::RenderWindow& window) {
 void ControlsState::handleInput(sf::RenderWindow &window) {
     while (const std::optional event = window.pollEvent()) {
         if (event->is<sf::Event::Closed>()) window.close();
-        if (event->is<sf::Event::KeyPressed>()) {
+        if (event->is<sf::Event::KeyPressed>() || event->is<sf::Event::MouseButtonPressed>()) {
             manager.popState();
         }
     }

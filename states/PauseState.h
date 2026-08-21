@@ -16,4 +16,6 @@ private:
     PauseRenderer renderer;
     std::vector<std::string> options;
     int selectedOption;
+
+    void executeOption(sf::RenderWindow& window) const;
 };
