@@ -67,7 +67,7 @@ void WinRenderer::render(sf::RenderWindow &window, int steps, float time, bool i
     titleText.setPosition({512.f, 60.f});
     window.draw(titleText);
 
-    currentStatsText.setString("Your Run: " + std::to_string(steps) + " steps  |  Time: " + timeStr);
+    currentStatsText.setString("Steps: " + std::to_string(steps) + " |  Time: " + timeStr);
     auto cBounds = currentStatsText.getLocalBounds();
     currentStatsText.setOrigin({cBounds.position.x + cBounds.size.x / 2.f, cBounds.position.y + cBounds.size.y / 2.f});
     currentStatsText.setPosition({512.f, 120.f});
