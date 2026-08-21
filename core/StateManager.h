@@ -28,7 +28,7 @@ class StateManager {
     private:
         std::vector<std::unique_ptr<AppState>> states;
         AudioManager audioManager;
-        NetworkManager networkManager{"http://127.0.0.1:8080"};
+        NetworkManager networkManager{"https://sokoban-stats.onrender.com"};
 
         enum class PendingAction { None, Push, Pop, Change, Reset };
         PendingAction pendingAction = PendingAction::None;
