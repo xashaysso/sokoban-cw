@@ -3,7 +3,7 @@
 #include "UsernameInputState.h"
 #include "../core/StateManager.h"
 
-StatsState::StatsState(StateManager &manager): manager(manager) {
+StatsState::StatsState(StateManager &manager): manager(manager), net(manager.getNetwork()) {
     std::string username = UsernameInputState::loadUsername();
     if (username.empty()) {
         this->hasError = true;
@@ -11,7 +11,12 @@ StatsState::StatsState(StateManager &manager): manager(manager) {
         return;
     }
 
-    net.getUserStats(username, [this](bool success, const std::vector<UserStatsResponse> &stats) {
+    auto alive = this->isAlive;
+
+    net.getUserStats(username, [this, alive](bool success, const std::vector<UserStatsResponse> &stats) {
+        if (!alive->load()) {
+            return;
+        }
         std::lock_guard<std::mutex> lock(this->dataMutex);
         if (success) {
             this->leaderboard = stats;

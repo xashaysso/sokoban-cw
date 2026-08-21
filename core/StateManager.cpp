@@ -44,6 +44,10 @@ AudioManager &StateManager::getAudio() {
     return audioManager;
 }
 
+NetworkManager &StateManager::getNetwork() {
+    return networkManager;
+}
+
 void StateManager::update(const float dt) {
     audioManager.update(dt);
     if (!states.empty()) {

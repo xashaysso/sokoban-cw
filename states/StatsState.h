@@ -1,4 +1,6 @@
 #pragma once
+#include <atomic>
+
 #include "AppState.h"
 #include "../graphics/StatsRenderer.h"
 #include "../network/NetworkManager.h"
@@ -14,12 +16,13 @@ public:
 private:
     StateManager& manager;
     StatsRenderer renderer;
-
-    NetworkManager net{"http://127.0.0.1:8080"};
+    NetworkManager net;
 
     std::vector<UserStatsResponse> leaderboard;
     std::mutex dataMutex;
     bool isLoading = true;
     bool hasError = false;
+
+    std::shared_ptr<std::atomic<bool>> isAlive = std::make_shared<std::atomic<bool>>(true);
 };
 

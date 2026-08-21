@@ -7,7 +7,7 @@
 #include "UsernameInputState.h"
 
 WinState::WinState(StateManager &manager, const int levelId, const int steps, const float time, const bool isLast, std::function<void()> onConfirm) : manager(
-    manager), levelId(levelId), finalSteps(steps), finalTime(time), lastLevel(isLast), onConfirm(std::move(onConfirm)) {
+    manager), net(manager.getNetwork()), levelId(levelId), finalSteps(steps), finalTime(time), lastLevel(isLast), onConfirm(std::move(onConfirm)) {
     auto &audio = manager.getAudio();
     audio.loadSound("win", "audio/win.wav");
     audio.playSound("win", 60.0f);
@@ -17,22 +17,35 @@ WinState::WinState(StateManager &manager, const int levelId, const int steps, co
 
     LevelStatsRequest req{username, steps, static_cast<int>(time)};
 
-    net.sendLevelStats(levelId, req, [this](bool ok) {
+    auto alive = this->isAlive;
+
+    net.sendLevelStats(levelId, req, [alive](bool ok) {
+        if (!alive->load()) {
+            return;
+        }
         if (ok) {
             std::cout << "Stats sent. Fetching leaderboard..." << std::endl;
         }
-        net.getLevelStats(this->levelId, [this](bool success, const std::vector<LevelStatsResponse> &stats) {
-            std::lock_guard<std::mutex> lock(this->dataMutex);
-            if (success) {
-                this->leaderboard = stats;
-                this->hasError = false;
-            } else {
-                this->hasError = true;
-            }
-            this->isLoading = false;
-        });
+    });
+    net.getLevelStats(this->levelId, [this, alive](bool success, const std::vector<LevelStatsResponse> &stats) {
+        if (!*alive) {
+            return;
+        }
+        std::lock_guard<std::mutex> lock(this->dataMutex);
+        if (success) {
+            this->leaderboard = stats;
+            this->hasError = false;
+        } else {
+            this->hasError = true;
+        }
+        this->isLoading = false;
     });
 }
+
+WinState::~WinState() {
+    *isAlive = false;
+}
+
 
 
 void WinState::draw(sf::RenderWindow &window) {
