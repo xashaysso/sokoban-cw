@@ -34,7 +34,7 @@ set(CURL_USE_LIBPSL OFF CACHE BOOL "" FORCE)
 set(CPR_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(cpr)
 
-add_executable(cw main.cpp
+add_executable(cw WIN32 main.cpp
         resource.rc
         entities/Player.cpp
         entities/Box.cpp

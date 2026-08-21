@@ -19,26 +19,26 @@ WinState::WinState(StateManager &manager, const int levelId, const int steps, co
 
     auto alive = this->isAlive;
 
-    net.sendLevelStats(levelId, req, [alive](bool ok) {
+    net.sendLevelStats(levelId, req, [this, alive](bool ok) {
         if (!alive->load()) {
             return;
         }
         if (ok) {
             std::cout << "Stats sent. Fetching leaderboard..." << std::endl;
         }
-    });
-    net.getLevelStats(this->levelId, [this, alive](bool success, const std::vector<LevelStatsResponse> &stats) {
-        if (!*alive) {
-            return;
-        }
-        std::lock_guard<std::mutex> lock(this->dataMutex);
-        if (success) {
-            this->leaderboard = stats;
-            this->hasError = false;
-        } else {
-            this->hasError = true;
-        }
-        this->isLoading = false;
+        net.getLevelStats(this->levelId, [this, alive](bool success, const std::vector<LevelStatsResponse> &stats) {
+            if (!*alive) {
+                return;
+            }
+            std::lock_guard<std::mutex> lock(this->dataMutex);
+            if (success) {
+                this->leaderboard = stats;
+                this->hasError = false;
+            } else {
+                this->hasError = true;
+            }
+            this->isLoading = false;
+        });
     });
 }
 
